@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
-import useModelData from './useModelData';
-import ModelSelector from './ModelSelector';
-import DraggableModel from './DraggableModel';
-import { Dialog } from '@headlessui/react'; // Import Headless UI for dialog
+import useModelData from './useModelData'; // Ensure the path is correct
+import ModelSelector from './ModelSelector'; // Ensure the path is correct
+import DraggableModel from './DraggableModel'; // Ensure the path is correct
 
 const Room = () => {
   const floorTexture = useTexture('/floor.jpg');
@@ -50,7 +49,6 @@ const RoomPlanner = () => {
   const [selectedModels, setSelectedModels] = useState([]);
   const [selectedModelId, setSelectedModelId] = useState(null);
   const [rotationAngle, setRotationAngle] = useState(0);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const handleModelSelect = (model) => {
@@ -94,29 +92,15 @@ const RoomPlanner = () => {
     setSelectedModelId(id);
   };
 
- 
-
-  const closeDialog = () => {
-    setIsDialogOpen(false);
-  };
-
   return (
-    <div className="relative h-screen w-screen flex">
-      {/* Sidebar Toggle Button */}
-      <button
-        className={`absolute top-4 left-4 z-10 p-2 bg-gray-600 text-white rounded-full ${isSidebarOpen ? 'hidden' : 'block'}`}
-        onClick={() => setIsSidebarOpen(true)}
-      >
-        <i className="fas fa-chevron-right"></i>
-      </button>
-      
+    <div className="flex flex-col lg:flex-row">
       {/* Sidebar */}
-      <div className={`w-full lg:w-64 p-4 bg-gray-100 border-b lg:border-b-0 lg:border-r border-gray-300 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <div className={`w-full lg:w-64 p-4 bg-gray-100 border-b lg:border-b-0 lg:border-r border-gray-300 transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
         <button
-          className="absolute top-4 right-4 z-10 p-2 bg-gray-600 text-white rounded-full lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="lg:hidden absolute top-4 left-4 p-2 bg-gray-500 text-white rounded-full"
         >
-          <i className="fas fa-chevron-left"></i>
+          <i className={`fas ${isSidebarOpen ? 'fa-chevron-left' : 'fa-chevron-right'}`}></i>
         </button>
         <ModelSelector models={modelData} onModelSelect={handleModelSelect} />
         <div className="mt-4">
@@ -144,12 +128,11 @@ const RoomPlanner = () => {
           </button>
         </div>
       </div>
-      
       <div className="flex-1 relative">
         <Canvas
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
-          className="w-full h-full bg-light-gray"
+          className="w-full h-screen bg-light-gray"
         >
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
@@ -167,40 +150,6 @@ const RoomPlanner = () => {
           ))}
           <OrbitControls enableRotate={false} />
         </Canvas>
-
-        {/* Product Dialog */}
-        <Dialog open={isDialogOpen} onClose={closeDialog} className="relative z-20">
-          <div className="fixed inset-0 flex items-center justify-center p-4 bg-black bg-opacity-50">
-            <Dialog.Panel className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
-              <Dialog.Title className="text-lg font-medium text-gray-900">Product List</Dialog.Title>
-              <Dialog.Description className="mt-2 text-sm text-gray-500">
-                Select a product to add to the room.
-              </Dialog.Description>
-              <ul className="mt-4 space-y-2">
-                {modelData.map((model) => (
-                  <li
-                    key={model.id}
-                    className="p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200"
-                    onClick={() => {
-                      handleModelSelect(model.url);
-                      closeDialog();
-                    }}
-                  >
-                    {model.name}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-4">
-                <button
-                  onClick={closeDialog}
-                  className="px-4 py-2 bg-red-500 text-white rounded-md"
-                >
-                  Close
-                </button>
-              </div>
-            </Dialog.Panel>
-          </div>
-        </Dialog>
       </div>
     </div>
   );
