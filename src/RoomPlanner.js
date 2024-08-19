@@ -4,7 +4,7 @@ import { OrbitControls, useGLTF, useTexture, TransformControls } from '@react-th
 import useModelData from './useModelData'; // Ensure the path is correct
 import ModelSelector from './ModelSelector'; // Ensure the path is correct
 
-const DraggableModel = ({ url }) => {
+const DraggableModel = ({ url, scale }) => {
   const { scene } = useGLTF(url, true); // Load the model, ensure correct url handling
   const modelRef = React.useRef();
   const controlsRef = React.useRef();
@@ -20,7 +20,7 @@ const DraggableModel = ({ url }) => {
       <primitive
         ref={modelRef}
         object={scene}
-        scale={[1, 1, 1]} // Adjust scale as needed
+        scale={scale} // Apply dynamic scale
       />
       <TransformControls
         ref={controlsRef}
@@ -73,13 +73,45 @@ const Room = () => {
 const RoomPlanner = () => {
   const modelData = useModelData();
   const [selectedModel, setSelectedModel] = useState(null);
+  const [scale, setScale] = useState([1, 1, 1]); // State for model scale
+  const [isLoading, setIsLoading] = useState(false); // State for loading dialog
+
+  const handleModelSelect = (model) => {
+    setIsLoading(true); // Show loading dialog
+    setSelectedModel(model);
+  };
+
+  const handleModelLoad = () => {
+    setIsLoading(false); // Hide loading dialog once model is loaded
+  };
+
+  const increaseSize = () => {
+    setScale((prev) => prev.map((s) => s + 0.1));
+  };
+
+  const decreaseSize = () => {
+    setScale((prev) => prev.map((s) => Math.max(s - 0.1, 0.1))); // Prevent size going below 0.1
+  };
 
   return (
     <div className="flex">
       <div className="w-64 p-4 bg-gray-100 border-r border-gray-300">
-        <ModelSelector models={modelData} onModelSelect={setSelectedModel} />
+        <ModelSelector models={modelData} onModelSelect={handleModelSelect} />
+        <div className="mt-4">
+          <button onClick={increaseSize} className="block w-full p-2 bg-blue-500 text-white mb-2">
+            Increase Size
+          </button>
+          <button onClick={decreaseSize} className="block w-full p-2 bg-red-500 text-white">
+            Decrease Size
+          </button>
+        </div>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 relative">
+        {isLoading && (
+          <div className="absolute inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-10">
+            <div className="p-4 bg-white rounded">Loading model...</div>
+          </div>
+        )}
         <Canvas
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
@@ -90,7 +122,9 @@ const RoomPlanner = () => {
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <Room />
-          {selectedModel && <DraggableModel url={selectedModel} />}
+          {selectedModel && (
+            <DraggableModel url={selectedModel} scale={scale} onLoad={handleModelLoad} />
+          )}
           <OrbitControls enableRotate={false} />
         </Canvas>
       </div>
