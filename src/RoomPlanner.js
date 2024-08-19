@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
-import useModelData from './useModelData'; 
-import ModelSelector from './ModelSelector'; 
-import DraggableModel from './DraggableModel'; 
+import useModelData from './useModelData'; // Ensure the path is correct
+import ModelSelector from './ModelSelector'; // Ensure the path is correct
+import DraggableModel from './DraggableModel'; // Ensure the path is correct
 
 const Room = () => {
   const floorTexture = useTexture('/wood.jpg');
@@ -48,42 +48,42 @@ const RoomPlanner = () => {
   const modelData = useModelData();
   const [selectedModels, setSelectedModels] = useState([]);
   const [selectedModelId, setSelectedModelId] = useState(null); // Track the selected model
+  const [isLoading, setIsLoading] = useState(false); // State for loading dialog
 
   const handleModelSelect = (model) => {
-    const newModel = { 
-      url: model, 
-      id: Date.now(), 
-      scale: [2, 2, 2] 
-    };
-    setSelectedModels([...selectedModels, newModel]);
-    setSelectedModelId(newModel.id); // Auto-select the newly added model
+    setIsLoading(true); // Show loading dialog
+    const newModel = { url: model, id: Date.now(), scale: [2, 2, 2] }; // Default scale
+    setSelectedModels([...selectedModels, newModel]); // Add model to the list
+    setSelectedModelId(newModel.id); // Automatically select the newly added model
+  };
+
+  const handleModelLoad = () => {
+    setIsLoading(false); // Hide loading dialog once model is loaded
   };
 
   const increaseSize = () => {
-    setSelectedModels(models =>
-      models.map(model =>
-        model.id === selectedModelId ? {
-          ...model,
-          scale: model.scale.map(s => s + 0.1)
-        } : model
+    setSelectedModels((prevModels) =>
+      prevModels.map((model) =>
+        model.id === selectedModelId ? { ...model, scale: model.scale.map(s => s + 0.1) } : model
       )
     );
   };
 
   const decreaseSize = () => {
-    setSelectedModels(models =>
-      models.map(model =>
-        model.id === selectedModelId ? {
-          ...model,
-          scale: model.scale.map(s => Math.max(s - 0.1, 0.1))
-        } : model
+    setSelectedModels((prevModels) =>
+      prevModels.map((model) =>
+        model.id === selectedModelId ? { ...model, scale: model.scale.map(s => Math.max(s - 0.1, 0.1)) } : model
       )
     );
   };
 
   const resetScene = () => {
-    setSelectedModels([]);
-    setSelectedModelId(null);
+    setSelectedModels([]); // Clear all models
+    setSelectedModelId(null); // Reset selected model
+  };
+
+  const handleModelClick = (id) => {
+    setSelectedModelId(id); // Set the clicked model as selected
   };
 
   return (
@@ -91,18 +91,10 @@ const RoomPlanner = () => {
       <div className="w-64 p-4 bg-gray-100 border-r border-gray-300">
         <ModelSelector models={modelData} onModelSelect={handleModelSelect} />
         <div className="mt-4">
-          <button 
-            onClick={increaseSize} 
-            className="block w-full p-2 bg-blue-500 text-white mb-2"
-            disabled={!selectedModelId} // Disable if no model is selected
-          >
+          <button onClick={increaseSize} className="block w-full p-2 bg-blue-500 text-white mb-2">
             Increase Size
           </button>
-          <button 
-            onClick={decreaseSize} 
-            className="block w-full p-2 bg-red-500 text-white"
-            disabled={!selectedModelId} // Disable if no model is selected
-          >
+          <button onClick={decreaseSize} className="block w-full p-2 bg-red-500 text-white">
             Decrease Size
           </button>
           <button onClick={resetScene} className="block w-full p-2 bg-gray-500 text-white mt-2">
@@ -111,6 +103,11 @@ const RoomPlanner = () => {
         </div>
       </div>
       <div className="flex-1 relative">
+        {isLoading && (
+          <div className="absolute inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-10">
+            <div className="p-4 bg-white rounded">Loading model...</div>
+          </div>
+        )}
         <Canvas
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
@@ -126,9 +123,9 @@ const RoomPlanner = () => {
               key={model.id}
               url={model.url}
               scale={model.scale}
-              onSelect={() => setSelectedModelId(model.id)}
-              isSelected={model.id === selectedModelId}
-              onLoad={() => console.log(`${model.url} loaded`)}
+              onLoad={handleModelLoad}
+              onClick={() => handleModelClick(model.id)} // Select model on click
+              isSelected={model.id === selectedModelId} // Highlight selected model
             />
           ))}
           <OrbitControls enableRotate={false} />
