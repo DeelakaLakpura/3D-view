@@ -5,7 +5,6 @@ import useModelData from './useModelData'; // Ensure the path is correct
 import ModelSelector from './ModelSelector'; // Ensure the path is correct
 import DraggableModel from './DraggableModel'; // Ensure the path is correct
 
-
 const Room = () => {
   const floorTexture = useTexture('/floor.jpg');
   const wallTexture = useTexture('/texture-2068283.jpg');
@@ -48,25 +47,19 @@ const Room = () => {
 const RoomPlanner = () => {
   const modelData = useModelData();
   const [selectedModels, setSelectedModels] = useState([]);
-  const [selectedModelId, setSelectedModelId] = useState(null); // Track the selected model
-  // State for loading dialog
-  const [rotationAngle, setRotationAngle] = useState(0); // Rotation angle for selected model
+  const [selectedModelId, setSelectedModelId] = useState(null);
+  const [rotationAngle, setRotationAngle] = useState(0);
 
   const handleModelSelect = (model) => {
-   // Show loading dialog
-    const newModel = { url: model, id: Date.now(), scale: [2, 2, 2], rotation: 0 }; // Default scale and rotation
-    setSelectedModels([...selectedModels, newModel]); // Add model to the list
-    setSelectedModelId(newModel.id); // Automatically select the newly added model
-  };
-
-  const handleModelLoad = () => {
-    // Hide loading dialog once model is loaded
+    const newModel = { url: model, id: Date.now(), scale: [2, 2, 2], rotation: [0, 0, 0] };
+    setSelectedModels([...selectedModels, newModel]);
+    setSelectedModelId(newModel.id);
   };
 
   const increaseSize = () => {
     setSelectedModels((prevModels) =>
       prevModels.map((model) =>
-        model.id === selectedModelId ? { ...model, scale: model.scale.map(s => s + 1) } : model
+        model.id === selectedModelId ? { ...model, scale: model.scale.map((s) => s + 0.1) } : model
       )
     );
   };
@@ -74,7 +67,7 @@ const RoomPlanner = () => {
   const decreaseSize = () => {
     setSelectedModels((prevModels) =>
       prevModels.map((model) =>
-        model.id === selectedModelId ? { ...model, scale: model.scale.map(s => Math.max(s - 1, 1)) } : model
+        model.id === selectedModelId ? { ...model, scale: model.scale.map((s) => Math.max(s - 0.1, 0.1)) } : model
       )
     );
   };
@@ -84,18 +77,18 @@ const RoomPlanner = () => {
     setRotationAngle(newAngle);
     setSelectedModels((prevModels) =>
       prevModels.map((model) =>
-        model.id === selectedModelId ? { ...model, rotation: newAngle } : model
+        model.id === selectedModelId ? { ...model, rotation: [0, newAngle * (Math.PI / 180), 0] } : model
       )
     );
   };
 
   const resetScene = () => {
-    setSelectedModels([]); // Clear all models
-    setSelectedModelId(null); // Reset selected model
+    setSelectedModels([]);
+    setSelectedModelId(null);
   };
 
   const handleModelClick = (id) => {
-    setSelectedModelId(id); // Set the clicked model as selected
+    setSelectedModelId(id);
   };
 
   return (
@@ -118,7 +111,7 @@ const RoomPlanner = () => {
               value={rotationAngle}
               onChange={handleRotationChange}
               className="w-full h-2 bg-gray-200 rounded-lg cursor-pointer"
-              style={{ backgroundSize: `${rotationAngle}% 100%` }} // Stylish slider
+              style={{ backgroundSize: `${rotationAngle}% 100%` }}
             />
             <div className="text-center text-gray-700">{rotationAngle}°</div>
           </div>
@@ -128,7 +121,6 @@ const RoomPlanner = () => {
         </div>
       </div>
       <div className="flex-1 relative">
-        
         <Canvas
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
@@ -145,9 +137,8 @@ const RoomPlanner = () => {
               url={model.url}
               scale={model.scale}
               rotation={model.rotation}
-              onLoad={handleModelLoad}
-              onClick={() => handleModelClick(model.id)} // Select model on click
-              isSelected={model.id === selectedModelId} // Highlight selected model
+              onClick={() => handleModelClick(model.id)}
+              isSelected={model.id === selectedModelId}
             />
           ))}
           <OrbitControls enableRotate={false} />
@@ -155,6 +146,6 @@ const RoomPlanner = () => {
       </div>
     </div>
   );
-}; 
+};
 
 export default RoomPlanner;
