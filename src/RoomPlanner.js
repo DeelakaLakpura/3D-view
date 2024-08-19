@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
 import useModelData from './useModelData'; // Ensure the path is correct
@@ -6,7 +6,7 @@ import ModelSelector from './ModelSelector'; // Ensure the path is correct
 import DraggableModel from './DraggableModel'; // Ensure the path is correct
 
 const Room = () => {
-  const floorTexture = useTexture('/floor.jpg');
+  const floorTexture = useTexture('/wood.jpg');
   const wallTexture = useTexture('/texture-2068283.jpg');
 
   return (
@@ -109,16 +109,17 @@ const RoomPlanner = () => {
             Decrease Size
           </button>
           <div className="mb-4">
-            <label className="block mb-2">Rotation (degrees):</label>
+            <label className="block mb-2 text-lg font-medium text-gray-700">Rotation (degrees):</label>
             <input
               type="range"
               min="0"
               max="360"
               value={rotationAngle}
               onChange={handleRotationChange}
-              className="w-full"
+              className="w-full h-2 bg-gray-200 rounded-lg cursor-pointer"
+              style={{ backgroundSize: `${rotationAngle}% 100%` }} // Stylish slider
             />
-            <div className="text-center">{rotationAngle}°</div>
+            <div className="text-center text-gray-700">{rotationAngle}°</div>
           </div>
           <button onClick={resetScene} className="block w-full p-2 bg-gray-500 text-white mt-2">
             Reset Scene
@@ -150,7 +151,6 @@ const RoomPlanner = () => {
               onLoad={handleModelLoad}
               onClick={() => handleModelClick(model.id)} // Select model on click
               isSelected={model.id === selectedModelId} // Highlight selected model
-              onRotate={(rotation) => handleRotationChange({ target: { value: rotation } })} // Handle rotation
             />
           ))}
           <OrbitControls enableRotate={false} />
