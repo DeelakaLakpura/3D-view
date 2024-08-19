@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
-import useModelData from './useModelData'; // Ensure the path is correct
-import ModelSelector from './ModelSelector'; // Ensure the path is correct
-import DraggableModel from './DraggableModel'; // Ensure the path is correct
+import useModelData from './useModelData';
+import DraggableModel from './DraggableModel';
 
 const Room = () => {
   const floorTexture = useTexture('/floor.jpg');
@@ -49,6 +48,7 @@ const RoomPlanner = () => {
   const [selectedModels, setSelectedModels] = useState([]);
   const [selectedModelId, setSelectedModelId] = useState(null);
   const [rotationAngle, setRotationAngle] = useState(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleModelSelect = (model) => {
     const newModel = { url: model, id: Date.now(), scale: [2, 2, 2], rotation: [0, 0, 0] };
@@ -91,59 +91,75 @@ const RoomPlanner = () => {
     setSelectedModelId(id);
   };
 
+  const openDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
-    <div className="flex flex-col lg:flex-row">
-      <div className="w-full lg:w-64 p-4 bg-gray-100 border-b lg:border-b-0 lg:border-r border-gray-300">
-        <ModelSelector models={modelData} onModelSelect={handleModelSelect} />
-        <div className="mt-4">
-          <button onClick={increaseSize} className="block w-full p-2 bg-blue-500 text-white mb-2">
-            Increase Size
-          </button>
-          <button onClick={decreaseSize} className="block w-full p-2 bg-red-500 text-white mb-2">
-            Decrease Size
-          </button>
-          <div className="mb-4">
-            <label className="block mb-2 text-lg font-medium text-gray-700">Rotation (degrees):</label>
-            <input
-              type="range"
-              min="0"
-              max="360"
-              value={rotationAngle}
-              onChange={handleRotationChange}
-              className="w-full h-2 bg-gray-200 rounded-lg cursor-pointer"
-              style={{ backgroundSize: `${rotationAngle}% 100%` }}
-            />
-            <div className="text-center text-gray-700">{rotationAngle}°</div>
+    <div className="relative w-full h-screen">
+      {/* Top Right Buttons */}
+      <div className="absolute top-4 right-4 z-10 flex space-x-2">
+        <button onClick={increaseSize} className="p-2 bg-blue-500 text-white rounded">
+          Increase Size
+        </button>
+        <button onClick={decreaseSize} className="p-2 bg-red-500 text-white rounded">
+          Decrease Size
+        </button>
+        <button onClick={openDialog} className="p-2 bg-gray-500 text-white rounded">
+          Product View
+        </button>
+        <button onClick={resetScene} className="p-2 bg-gray-700 text-white rounded">
+          Reset Scene
+        </button>
+      </div>
+
+      {/* Canvas for 3D Room */}
+      <Canvas shadows camera={{ position: [0, 31.5, 50], fov: 60 }} className="w-full h-full">
+        <ambientLight intensity={1} />
+        <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
+        <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
+        <Room />
+        {selectedModels.map((model) => (
+          <DraggableModel
+            key={model.id}
+            url={model.url}
+            scale={model.scale}
+            rotation={model.rotation}
+            onClick={() => handleModelClick(model.id)}
+            isSelected={model.id === selectedModelId}
+          />
+        ))}
+        <OrbitControls enableRotate={false} />
+      </Canvas>
+
+      {/* Product View Dialog */}
+      {isDialogOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+            <h2 className="text-lg font-bold mb-4">Product List</h2>
+            <div className="max-h-64 overflow-y-auto">
+              {modelData.map((model) => (
+                <div key={model} className="flex items-center justify-between mb-2">
+                  <span>{model}</span>
+                  <button
+                    onClick={() => handleModelSelect(model)}
+                    className="p-2 bg-blue-500 text-white rounded"
+                  >
+                    Add to Room
+                  </button>
+                </div>
+              ))}
+            </div>
+            <button onClick={closeDialog} className="mt-4 p-2 bg-gray-500 text-white rounded w-full">
+              Close
+            </button>
           </div>
-          <button onClick={resetScene} className="block w-full p-2 bg-gray-500 text-white mt-2">
-            Reset Scene
-          </button>
         </div>
-      </div>
-      <div className="flex-1 relative">
-        <Canvas
-          shadows
-          camera={{ position: [0, 31.5, 50], fov: 60 }}
-          className="w-full h-screen bg-light-gray"
-          style={{ width: '100%', height: '80vh', backgroundColor: 'lightgray' }}
-        >
-          <ambientLight intensity={1} />
-          <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
-          <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
-          <Room />
-          {selectedModels.map((model) => (
-            <DraggableModel
-              key={model.id}
-              url={model.url}
-              scale={model.scale}
-              rotation={model.rotation}
-              onClick={() => handleModelClick(model.id)}
-              isSelected={model.id === selectedModelId}
-            />
-          ))}
-          <OrbitControls enableRotate={false} />
-        </Canvas>
-      </div>
+      )}
     </div>
   );
 };
