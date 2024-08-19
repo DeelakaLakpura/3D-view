@@ -1,47 +1,45 @@
-import React, { useRef } from 'react';
-import { useGLTF, TransformControls } from '@react-three/drei';
+import React from 'react';
+import { useGLTF ,TransformControls } from '@react-three/drei';
 
-const DraggableModel = ({ url, scale, onLoad, onClick, isSelected, onRotate }) => {
-  const { scene } = useGLTF(url, true);
-  const modelRef = useRef();
-  const controlsRef = useRef();
-  const rotationControlsRef = useRef();
+const DraggableModel = ({ url, scale, onLoad }) => {
+  const { scene, materials } = useGLTF(url, true); // Load the model, ensure correct url handling
+  const modelRef = React.useRef();
+  const controlsRef = React.useRef();
 
   React.useEffect(() => {
     if (modelRef.current && controlsRef.current) {
       controlsRef.current.attach(modelRef.current);
     }
-    if (rotationControlsRef.current) {
-      rotationControlsRef.current.attach(modelRef.current);
+  }, [modelRef, controlsRef]);
+
+  // Trigger the onLoad callback after the model has been fully loaded
+  React.useEffect(() => {
+    if (scene && onLoad) {
+      onLoad();
     }
-    if (onLoad) onLoad();
-  }, [modelRef, controlsRef, rotationControlsRef, onLoad]);
+  }, [scene, onLoad]);
+
+  // Adjust material properties if needed
+  React.useEffect(() => {
+    if (materials) {
+      Object.values(materials).forEach((material) => {
+        material.needsUpdate = true;
+      });
+    }
+  }, [materials]);
 
   return (
     <>
       <primitive
         ref={modelRef}
-        object={scene}
-        scale={20}
-        onClick={onClick}
-        castShadow
-        receiveShadow
+        object={20}
+        scale={scale} // Apply dynamic scale
       />
-      {isSelected && (
-        <>
-          <TransformControls
-            ref={controlsRef}
-            object={modelRef.current}
-            mode="translate"
-          />
-          <TransformControls
-            ref={rotationControlsRef}
-            object={modelRef.current}
-            mode="rotate"
-            onChange={onRotate} // Optional: Callback for rotation changes
-          />
-        </>
-      )}
+      <TransformControls
+        ref={controlsRef}
+        object={modelRef.current}
+        mode="translate"
+      />
     </>
   );
 };
