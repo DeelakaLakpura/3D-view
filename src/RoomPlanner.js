@@ -49,18 +49,18 @@ const RoomPlanner = () => {
   const modelData = useModelData();
   const [selectedModels, setSelectedModels] = useState([]);
   const [selectedModelId, setSelectedModelId] = useState(null); // Track the selected model
-  const [isLoading, setIsLoading] = useState(false); // State for loading dialog
+  // State for loading dialog
   const [rotationAngle, setRotationAngle] = useState(0); // Rotation angle for selected model
 
   const handleModelSelect = (model) => {
-    setIsLoading(true); // Show loading dialog
+   // Show loading dialog
     const newModel = { url: model, id: Date.now(), scale: [2, 2, 2], rotation: 0 }; // Default scale and rotation
     setSelectedModels([...selectedModels, newModel]); // Add model to the list
     setSelectedModelId(newModel.id); // Automatically select the newly added model
   };
 
   const handleModelLoad = () => {
-    setIsLoading(false); // Hide loading dialog once model is loaded
+    // Hide loading dialog once model is loaded
   };
 
   const increaseSize = () => {
