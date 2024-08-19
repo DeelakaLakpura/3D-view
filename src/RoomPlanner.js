@@ -92,8 +92,8 @@ const RoomPlanner = () => {
   };
 
   return (
-    <div className="flex">
-      <div className="w-64 p-4 bg-gray-100 border-r border-gray-300">
+    <div className="flex flex-col lg:flex-row">
+      <div className="w-full lg:w-64 p-4 bg-gray-100 border-b lg:border-b-0 lg:border-r border-gray-300">
         <ModelSelector models={modelData} onModelSelect={handleModelSelect} />
         <div className="mt-4">
           <button onClick={increaseSize} className="block w-full p-2 bg-blue-500 text-white mb-2">
@@ -125,7 +125,7 @@ const RoomPlanner = () => {
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
           className="w-full h-screen bg-light-gray"
-          style={{ width: '100%', height: '800px', backgroundColor: 'lightgray' }}
+          style={{ width: '100%', height: '80vh', backgroundColor: 'lightgray' }}
         >
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
