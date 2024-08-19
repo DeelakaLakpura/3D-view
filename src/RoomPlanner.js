@@ -4,8 +4,7 @@ import { OrbitControls, useTexture } from '@react-three/drei';
 import useModelData from './useModelData'; // Ensure the path is correct
 import ModelSelector from './ModelSelector'; // Ensure the path is correct
 import DraggableModel from './DraggableModel'; // Ensure the path is correct
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+
 
 const Room = () => {
   const floorTexture = useTexture('/floor.jpg');
@@ -105,10 +104,10 @@ const RoomPlanner = () => {
         <ModelSelector models={modelData} onModelSelect={handleModelSelect} />
         <div className="mt-4">
           <button onClick={increaseSize} className="block w-full p-2 bg-blue-500 text-white mb-2">
-              <FontAwesomeIcon icon={faPlus} className="text-xl" />
+            Increase Size
           </button>
           <button onClick={decreaseSize} className="block w-full p-2 bg-red-500 text-white mb-2">
-          <FontAwesomeIcon icon={faMinus} className="text-xl" />
+            Decrease Size
           </button>
           <div className="mb-4">
             <label className="block mb-2 text-lg font-medium text-gray-700">Rotation (degrees):</label>
@@ -131,6 +130,9 @@ const RoomPlanner = () => {
       <div className="flex-1 relative">
         {isLoading && (
           <div className="absolute inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-10">
+          <div>
+<dotlottie-player src="https://lottie.host/26a21a33-0f06-4040-8569-fdd95203dcfc/9N0zcfkBrF.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+            </div>
             <div className="p-4 bg-white rounded">Loading model...</div>
           </div>
         )}
