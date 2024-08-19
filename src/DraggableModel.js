@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
-import { useGLTF, TransformControls } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei';
 
-const DraggableModel = ({ url, scale, rotation, onLoad, onClick, isSelected }) => {
-  const { scene } = useGLTF(url, true);
+const DraggableModel = ({ url, scale, rotation, isSelected, onLoad, onClick }) => {
+  const { scene } = useGLTF(url, true); // Load the model
   const modelRef = useRef();
   const controlsRef = useRef();
 
@@ -13,30 +13,20 @@ const DraggableModel = ({ url, scale, rotation, onLoad, onClick, isSelected }) =
   }, [modelRef, controlsRef]);
 
   useEffect(() => {
-    if (modelRef.current) {
-      modelRef.current.scale.set(...scale);
-      modelRef.current.rotation.y = rotation;
-    }
-  }, [scale, rotation]);
+    if (onLoad) onLoad(); // Trigger onLoad callback
+  }, [onLoad]);
 
   return (
-    <>
-      <primitive
-        ref={modelRef}
-        object={scene}
-        scale={scale}
-        rotation={[0, rotation, 0]}
-        onClick={onClick}
-        onLoad={onLoad}
-      />
-      {isSelected && (
-        <TransformControls
-          ref={controlsRef}
-          object={modelRef.current}
-          mode="translate"
-        />
-      )}
-    </>
+    <primitive
+      ref={modelRef}
+      object={scene}
+      scale={scale}
+      rotation={[0, rotation, 0]} // Apply rotation
+      onClick={onClick}
+      onLoad={onLoad} // Ensure onLoad is triggered
+    >
+      {/* Ensure the textures are loaded */}
+    </primitive>
   );
 };
 

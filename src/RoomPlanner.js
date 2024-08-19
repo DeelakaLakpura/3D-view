@@ -179,7 +179,7 @@ const RoomPlanner = () => {
               rotation={model.rotation}
               isSelected={model.id === selectedModelId}
               onLoad={handleModelLoad}
-              onClick={() => handleModelClick(model.id)}
+              onClick={() =>  handleModelClick(model.id)}
             />
           ))}
           <OrbitControls enableRotate={false} />
