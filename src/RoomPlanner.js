@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus, faUndo } from '@fortawesome/free-solid-svg-icons';
 
 const Room = () => {
-  const floorTexture = useTexture('/floor.jpg');
+  const floorTexture = useTexture('/wood.jpg');
   const wallTexture = useTexture('/texture-2068283.jpg');
 
   return (
@@ -145,7 +145,7 @@ const RoomPlanner = () => {
       <div className="flex-1 relative">
         {isLoading && (
           <div className="absolute inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-10">
-            <div className="flex flex-col items-center p-4 bg-white rounded mt-4">
+            <div className="flex flex-col items-center">
               <dotlottie-player
                 src="https://lottie.host/26a21a33-0f06-4040-8569-fdd95203dcfc/9N0zcfkBrF.json"
                 background="transparent"
@@ -154,7 +154,7 @@ const RoomPlanner = () => {
                 loop
                 autoplay
               ></dotlottie-player>
-             Loading model...
+              <div className="p-4 bg-white rounded mt-4">Loading model...</div>
             </div>
           </div>
         )}
