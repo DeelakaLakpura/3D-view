@@ -1,8 +1,8 @@
 import React from 'react';
-import { useGLTF, TransformControls } from '@react-three/drei';
+import { TransformControls, useGLTF } from '@react-three/drei';
 
-const DraggableModel = ({ url }) => {
-  const { scene, error } = useGLTF(url, true); // Ensure proper URL handling
+const DraggableModel = ({ url, scale, onLoad }) => {
+  const { scene } = useGLTF(url, true); // Load the model, ensure correct url handling
   const modelRef = React.useRef();
   const controlsRef = React.useRef();
 
@@ -12,17 +12,19 @@ const DraggableModel = ({ url }) => {
     }
   }, [modelRef, controlsRef]);
 
-  if (error) {
-    console.error('Failed to load model:', error.message);
-    return <p>Error loading model</p>;
-  }
+  // Trigger the onLoad callback after the model has been fully loaded
+  React.useEffect(() => {
+    if (scene && onLoad) {
+      onLoad();
+    }
+  }, [scene, onLoad]);
 
   return (
     <>
       <primitive
         ref={modelRef}
         object={scene}
-        scale={[1, 1, 1]} // Adjust scale as needed
+        scale={scale} // Apply dynamic scale
       />
       <TransformControls
         ref={controlsRef}

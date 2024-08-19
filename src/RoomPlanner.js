@@ -1,35 +1,9 @@
 import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF, useTexture, TransformControls } from '@react-three/drei';
+import { OrbitControls, useTexture } from '@react-three/drei';
 import useModelData from './useModelData'; // Ensure the path is correct
 import ModelSelector from './ModelSelector'; // Ensure the path is correct
-
-const DraggableModel = ({ url, scale }) => {
-  const { scene } = useGLTF(url, true); // Load the model, ensure correct url handling
-  const modelRef = React.useRef();
-  const controlsRef = React.useRef();
-
-  React.useEffect(() => {
-    if (modelRef.current && controlsRef.current) {
-      controlsRef.current.attach(modelRef.current);
-    }
-  }, [modelRef, controlsRef]);
-
-  return (
-    <>
-      <primitive
-        ref={modelRef}
-        object={scene}
-        scale={scale} // Apply dynamic scale
-      />
-      <TransformControls
-        ref={controlsRef}
-        object={modelRef.current}
-        mode="translate"
-      />
-    </>
-  );
-};
+import DraggableModel from './DraggableModel'; // Ensure the path is correct
 
 const Room = () => {
   const floorTexture = useTexture('/wood.jpg');
