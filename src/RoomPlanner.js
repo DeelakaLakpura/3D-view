@@ -5,10 +5,10 @@ import useModelData from './useModelData'; // Ensure the path is correct
 import ModelSelector from './ModelSelector'; // Ensure the path is correct
 import DraggableModel from './DraggableModel'; // Ensure the path is correct
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 const Room = () => {
-  const floorTexture = useTexture('/wood.jpg');
+  const floorTexture = useTexture('/floor.jpg');
   const wallTexture = useTexture('/texture-2068283.jpg');
 
   return (
@@ -104,17 +104,11 @@ const RoomPlanner = () => {
       <div className="w-64 p-4 bg-gray-100 border-r border-gray-300">
         <ModelSelector models={modelData} onModelSelect={handleModelSelect} />
         <div className="mt-4">
-          <button
-            onClick={increaseSize}
-            className="block w-full p-2 mb-2 flex items-center justify-center bg-blue-500 text-white rounded"
-          >
-            <FontAwesomeIcon icon={faPlus} className="text-xl" />
+          <button onClick={increaseSize} className="block w-full p-2 bg-blue-500 text-white mb-2">
+              <FontAwesomeIcon icon={faPlus} className="text-xl" />
           </button>
-          <button
-            onClick={decreaseSize}
-            className="block w-full p-2 mb-2 flex items-center justify-center bg-red-500 text-white rounded"
-          >
-            <FontAwesomeIcon icon={faMinus} className="text-xl" />
+          <button onClick={decreaseSize} className="block w-full p-2 bg-red-500 text-white mb-2">
+          <FontAwesomeIcon icon={faMinus} className="text-xl" />
           </button>
           <div className="mb-4">
             <label className="block mb-2 text-lg font-medium text-gray-700">Rotation (degrees):</label>
@@ -129,12 +123,8 @@ const RoomPlanner = () => {
             />
             <div className="text-center text-gray-700">{rotationAngle}°</div>
           </div>
-          <button
-            onClick={resetScene}
-            className="block w-full p-2 bg-gray-500 text-white mt-2 rounded flex items-center justify-center"
-          >
-            <FontAwesomeIcon icon={faUndo} className="text-xl" />
-            <span className="ml-2">Reset Scene</span>
+          <button onClick={resetScene} className="block w-full p-2 bg-gray-500 text-white mt-2">
+            Reset Scene
           </button>
         </div>
       </div>
