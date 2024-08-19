@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
 import useModelData from './useModelData';
+
 import DraggableModel from './DraggableModel';
-import { Dialog } from '@headlessui/react'; 
+import { Dialog } from '@headlessui/react'; // Import Headless UI for dialog
 
 const Room = () => {
   const floorTexture = useTexture('/floor.jpg');
@@ -48,7 +49,7 @@ const RoomPlanner = () => {
   const modelData = useModelData();
   const [selectedModels, setSelectedModels] = useState([]);
   const [selectedModelId, setSelectedModelId] = useState(null);
-  
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleModelSelect = (model) => {
@@ -73,7 +74,6 @@ const RoomPlanner = () => {
     );
   };
 
-  
 
   const resetScene = () => {
     setSelectedModels([]);
@@ -94,7 +94,8 @@ const RoomPlanner = () => {
 
   return (
     <div className="relative h-screen w-screen">
-      <div className="absolute top-4 right-4 flex space-x-4">
+      {/* Control Buttons */}
+      <div className="absolute top-4 right-4 flex flex-col space-y-4 z-10">
         <button
           onClick={increaseSize}
           className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-md"
@@ -124,7 +125,8 @@ const RoomPlanner = () => {
       <Canvas
         shadows
         camera={{ position: [0, 31.5, 50], fov: 60 }}
-        className="w-full  mt-10 bg-light-gray"
+        className="w-full h-full bg-light-gray"
+        style={{ position: 'relative', zIndex: 0 }}
       >
         <ambientLight intensity={1} />
         <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
@@ -144,7 +146,7 @@ const RoomPlanner = () => {
       </Canvas>
 
       {/* Product Dialog */}
-      <Dialog open={isDialogOpen} onClose={closeDialog} className="relative z-10">
+      <Dialog open={isDialogOpen} onClose={closeDialog} className="relative z-20">
         <div className="fixed inset-0 flex items-center justify-center p-4 bg-black bg-opacity-50">
           <Dialog.Panel className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
             <Dialog.Title className="text-lg font-medium text-gray-900">Product List</Dialog.Title>
