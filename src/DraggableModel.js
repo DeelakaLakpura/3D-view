@@ -2,7 +2,7 @@ import React from 'react';
 import { useGLTF ,TransformControls } from '@react-three/drei';
 
 const DraggableModel = ({ url, scale, onLoad }) => {
-  const { scene, materials, nodes } = useGLTF(url, true); // Load the model, ensure correct url handling
+  const { scene, materials } = useGLTF(url, true); // Load the model, ensure correct url handling
   const modelRef = React.useRef();
   const controlsRef = React.useRef();
 
