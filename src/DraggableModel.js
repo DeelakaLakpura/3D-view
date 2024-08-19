@@ -1,45 +1,41 @@
-import React from 'react';
-import { useGLTF ,TransformControls } from '@react-three/drei';
+import React, { useEffect, useRef } from 'react';
+import { useGLTF, TransformControls } from '@react-three/drei';
 
-const DraggableModel = ({ url, scale, onLoad }) => {
-  const { scene, materials } = useGLTF(url, true); // Load the model, ensure correct url handling
-  const modelRef = React.useRef();
-  const controlsRef = React.useRef();
+const DraggableModel = ({ url, scale, onSelect, isSelected, onLoad }) => {
+  const { scene } = useGLTF(url, true); 
+  const modelRef = useRef();
+  const controlsRef = useRef();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (modelRef.current && controlsRef.current) {
       controlsRef.current.attach(modelRef.current);
     }
   }, [modelRef, controlsRef]);
 
-  // Trigger the onLoad callback after the model has been fully loaded
-  React.useEffect(() => {
-    if (scene && onLoad) {
-      onLoad();
+  useEffect(() => {
+    if (isSelected) {
+      controlsRef.current.setMode('scale'); // Enable scaling mode for selected model
+    } else {
+      controlsRef.current.setMode('translate'); // Disable scaling mode for other models
     }
-  }, [scene, onLoad]);
-
-  // Adjust material properties if needed
-  React.useEffect(() => {
-    if (materials) {
-      Object.values(materials).forEach((material) => {
-        material.needsUpdate = true;
-      });
-    }
-  }, [materials]);
+  }, [isSelected]);
 
   return (
     <>
       <primitive
         ref={modelRef}
         object={scene}
-        scale={scale} // Apply dynamic scale
+        scale={scale} 
+        onClick={onSelect} // Select the model on click
+        onPointerMissed={() => onSelect(null)} // Deselect on miss
       />
-      <TransformControls
-        ref={controlsRef}
-        object={modelRef.current}
-        mode="translate"
-      />
+      {isSelected && (
+        <TransformControls
+          ref={controlsRef}
+          object={modelRef.current}
+          mode="translate"
+        />
+      )}
     </>
   );
 };

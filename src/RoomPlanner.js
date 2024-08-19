@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
-import useModelData from './useModelData'; // Ensure the path is correct
-import ModelSelector from './ModelSelector'; // Ensure the path is correct
-import DraggableModel from './DraggableModel'; // Ensure the path is correct
+import useModelData from './useModelData'; 
+import ModelSelector from './ModelSelector'; 
+import DraggableModel from './DraggableModel'; 
 
 const Room = () => {
   const floorTexture = useTexture('/wood.jpg');
@@ -47,29 +47,43 @@ const Room = () => {
 const RoomPlanner = () => {
   const modelData = useModelData();
   const [selectedModels, setSelectedModels] = useState([]);
-  const [scale, setScale] = useState([2, 2, 2]); // Default scale for all models
-  const [isLoading, setIsLoading] = useState(false); // State for loading dialog
+  const [selectedModelId, setSelectedModelId] = useState(null); // Track the selected model
 
   const handleModelSelect = (model) => {
-    setIsLoading(true); // Show loading dialog
-    setSelectedModels([...selectedModels, { url: model, id: Date.now(), scale }]); // Add model to the list
-  };
-
-  const handleModelLoad = () => {
-    setIsLoading(false); // Hide loading dialog once model is loaded
+    const newModel = { 
+      url: model, 
+      id: Date.now(), 
+      scale: [2, 2, 2] 
+    };
+    setSelectedModels([...selectedModels, newModel]);
+    setSelectedModelId(newModel.id); // Auto-select the newly added model
   };
 
   const increaseSize = () => {
-    setScale((prev) => prev.map((s) => s + 0.1));
+    setSelectedModels(models =>
+      models.map(model =>
+        model.id === selectedModelId ? {
+          ...model,
+          scale: model.scale.map(s => s + 0.1)
+        } : model
+      )
+    );
   };
 
   const decreaseSize = () => {
-    setScale((prev) => prev.map((s) => Math.max(s - 0.1, 0.1))); // Prevent size going below 0.1
+    setSelectedModels(models =>
+      models.map(model =>
+        model.id === selectedModelId ? {
+          ...model,
+          scale: model.scale.map(s => Math.max(s - 0.1, 0.1))
+        } : model
+      )
+    );
   };
 
   const resetScene = () => {
-    setSelectedModels([]); // Clear all models
-    setScale([2, 2, 2]); // Reset scale to default
+    setSelectedModels([]);
+    setSelectedModelId(null);
   };
 
   return (
@@ -77,10 +91,18 @@ const RoomPlanner = () => {
       <div className="w-64 p-4 bg-gray-100 border-r border-gray-300">
         <ModelSelector models={modelData} onModelSelect={handleModelSelect} />
         <div className="mt-4">
-          <button onClick={increaseSize} className="block w-full p-2 bg-blue-500 text-white mb-2">
+          <button 
+            onClick={increaseSize} 
+            className="block w-full p-2 bg-blue-500 text-white mb-2"
+            disabled={!selectedModelId} // Disable if no model is selected
+          >
             Increase Size
           </button>
-          <button onClick={decreaseSize} className="block w-full p-2 bg-red-500 text-white">
+          <button 
+            onClick={decreaseSize} 
+            className="block w-full p-2 bg-red-500 text-white"
+            disabled={!selectedModelId} // Disable if no model is selected
+          >
             Decrease Size
           </button>
           <button onClick={resetScene} className="block w-full p-2 bg-gray-500 text-white mt-2">
@@ -89,11 +111,6 @@ const RoomPlanner = () => {
         </div>
       </div>
       <div className="flex-1 relative">
-        {isLoading && (
-          <div className="absolute inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-10">
-            <div className="p-4 bg-white rounded">Loading model...</div>
-          </div>
-        )}
         <Canvas
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
@@ -109,7 +126,9 @@ const RoomPlanner = () => {
               key={model.id}
               url={model.url}
               scale={model.scale}
-              onLoad={handleModelLoad}
+              onSelect={() => setSelectedModelId(model.id)}
+              isSelected={model.id === selectedModelId}
+              onLoad={() => console.log(`${model.url} loaded`)}
             />
           ))}
           <OrbitControls enableRotate={false} />
