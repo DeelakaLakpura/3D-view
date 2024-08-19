@@ -47,7 +47,7 @@ const Room = () => {
 const RoomPlanner = () => {
   const modelData = useModelData();
   const [selectedModel, setSelectedModel] = useState(null);
-  const [scale, setScale] = useState([1, 1, 1]); // State for model scale
+  const [scale, setScale] = useState([2, 2, 2]); // Increased default scale
   const [isLoading, setIsLoading] = useState(false); // State for loading dialog
 
   const handleModelSelect = (model) => {

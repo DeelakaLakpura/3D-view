@@ -1,8 +1,8 @@
 import React from 'react';
-import { TransformControls, useGLTF } from '@react-three/drei';
+import { useGLTF ,TransformControls } from '@react-three/drei';
 
 const DraggableModel = ({ url, scale, onLoad }) => {
-  const { scene } = useGLTF(url, true); // Load the model, ensure correct url handling
+  const { scene, materials, nodes } = useGLTF(url, true); // Load the model, ensure correct url handling
   const modelRef = React.useRef();
   const controlsRef = React.useRef();
 
@@ -18,6 +18,15 @@ const DraggableModel = ({ url, scale, onLoad }) => {
       onLoad();
     }
   }, [scene, onLoad]);
+
+  // Adjust material properties if needed
+  React.useEffect(() => {
+    if (materials) {
+      Object.values(materials).forEach((material) => {
+        material.needsUpdate = true;
+      });
+    }
+  }, [materials]);
 
   return (
     <>
