@@ -128,21 +128,7 @@ const RoomPlanner = () => {
         </div>
       </div>
       <div className="flex-1 relative">
-        {isLoading && (
-          <div className="absolute inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-10">
-          <div>
-          <dotlottie-player
-                src="https://lottie.host/26a21a33-0f06-4040-8569-fdd95203dcfc/9N0zcfkBrF.json"
-                background="transparent"
-                speed="1"
-                style={{ width: '300px', height: '300px' }}
-                loop
-                autoplay
-              ></dotlottie-player>
-            </div>
-            <div className="p-4 bg-white rounded">Loading model...</div>
-          </div>
-        )}
+        
         <Canvas
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
