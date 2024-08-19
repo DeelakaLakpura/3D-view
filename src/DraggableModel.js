@@ -10,24 +10,24 @@ const DraggableModel = ({ url, scale, rotation, onLoad, onClick, isSelected }) =
     if (modelRef.current && controlsRef.current) {
       controlsRef.current.attach(modelRef.current);
     }
-    if (onLoad) onLoad();
-  }, [modelRef, controlsRef, onLoad]);
+  }, [modelRef, controlsRef]);
 
   useEffect(() => {
     if (modelRef.current) {
+      modelRef.current.scale.set(...scale);
       modelRef.current.rotation.y = rotation;
     }
-  }, [rotation]);
+  }, [scale, rotation]);
 
   return (
     <>
       <primitive
         ref={modelRef}
         object={scene}
-        scale={20}
+        scale={scale}
+        rotation={[0, rotation, 0]}
         onClick={onClick}
-        castShadow
-        receiveShadow
+        onLoad={onLoad}
       />
       {isSelected && (
         <TransformControls
