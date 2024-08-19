@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 
 const DraggableModel = ({ url, scale, rotation, isSelected, onLoad, onClick }) => {
-  const { scene } = useGLTF(url, true); // Load the model
+  const { scene, } = useGLTF(url, true); // Load the model
   const modelRef = useRef();
   const controlsRef = useRef();
 
