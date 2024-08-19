@@ -6,7 +6,7 @@ import ModelSelector from './ModelSelector'; // Ensure the path is correct
 import DraggableModel from './DraggableModel'; // Ensure the path is correct
 
 const Room = () => {
-  const floorTexture = useTexture('/wood.jpg');
+  const floorTexture = useTexture('/floor.jpg');
   const wallTexture = useTexture('/texture-2068283.jpg');
 
   return (
@@ -33,7 +33,7 @@ const Room = () => {
       <mesh receiveShadow rotation={[0, -Math.PI / 2, 0]} position={[25, 12.5, 0]}>
         <boxGeometry args={[50, 25, 1]} />
         <meshStandardMaterial map={wallTexture} />
-      </mesh> 
+      </mesh>
 
       {/* Ceiling */}
       <mesh receiveShadow rotation={[Math.PI, 0, 0]} position={[0, 25, 0]}>

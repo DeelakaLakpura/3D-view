@@ -1,33 +1,27 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useGLTF, TransformControls } from '@react-three/drei';
 
-const DraggableModel = ({ url, scale, onSelect, isSelected, onLoad }) => {
-  const { scene } = useGLTF(url, true); 
+const DraggableModel = ({ url, scale, onLoad, onClick, isSelected }) => {
+  const { scene } = useGLTF(url, true);
   const modelRef = useRef();
   const controlsRef = useRef();
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (modelRef.current && controlsRef.current) {
       controlsRef.current.attach(modelRef.current);
     }
-  }, [modelRef, controlsRef]);
-
-  useEffect(() => {
-    if (isSelected) {
-      controlsRef.current.setMode('scale'); // Enable scaling mode for selected model
-    } else {
-      controlsRef.current.setMode('translate'); // Disable scaling mode for other models
-    }
-  }, [isSelected]);
+    if (onLoad) onLoad();
+  }, [modelRef, controlsRef, onLoad]);
 
   return (
     <>
       <primitive
         ref={modelRef}
         object={scene}
-        scale={scale} 
-        onClick={onSelect} // Select the model on click
-        onPointerMissed={() => onSelect(null)} // Deselect on miss
+        scale={scale}
+        onClick={onClick}
+        castShadow
+        receiveShadow
       />
       {isSelected && (
         <TransformControls
