@@ -1,19 +1,18 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { TransformControls, useGLTF } from '@react-three/drei';
 
-const DraggableModel = ({ url, scale, onLoad }) => {
-  const { scene } = useGLTF(url, true); // Load the model, ensure correct url handling
-  const modelRef = React.useRef();
-  const controlsRef = React.useRef();
+const DraggableModel = ({ url, scale, onLoad, onClick, isSelected }) => {
+  const { scene } = useGLTF(url, true);
+  const modelRef = useRef();
+  const controlsRef = useRef();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (modelRef.current && controlsRef.current) {
       controlsRef.current.attach(modelRef.current);
     }
   }, [modelRef, controlsRef]);
 
-  // Trigger the onLoad callback after the model has been fully loaded
-  React.useEffect(() => {
+  useEffect(() => {
     if (scene && onLoad) {
       onLoad();
     }
@@ -24,13 +23,16 @@ const DraggableModel = ({ url, scale, onLoad }) => {
       <primitive
         ref={modelRef}
         object={scene}
-        scale={20} // Apply dynamic scale
+        scale={scale} // Ensure dynamic scale is applied
+        onClick={onClick} // Handle model selection on click
       />
-      <TransformControls
-        ref={controlsRef}
-        object={modelRef.current}
-        mode="translate"
-      />
+      {isSelected && (
+        <TransformControls
+          ref={controlsRef}
+          object={modelRef.current}
+          mode="translate"
+        />
+      )}
     </>
   );
 };
