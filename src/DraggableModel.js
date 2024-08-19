@@ -1,13 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useGLTF, TransformControls } from '@react-three/drei';
 
-const DraggableModel = ({ url, scale, onLoad, onClick, isSelected, onRotate }) => {
+const DraggableModel = ({ url, scale, rotation, onLoad, onClick, isSelected, onRotate }) => {
   const { scene } = useGLTF(url, true);
   const modelRef = useRef();
   const controlsRef = useRef();
   const rotationControlsRef = useRef();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (modelRef.current && controlsRef.current) {
       controlsRef.current.attach(modelRef.current);
     }
@@ -16,6 +16,12 @@ const DraggableModel = ({ url, scale, onLoad, onClick, isSelected, onRotate }) =
     }
     if (onLoad) onLoad();
   }, [modelRef, controlsRef, rotationControlsRef, onLoad]);
+
+  useEffect(() => {
+    if (modelRef.current) {
+      modelRef.current.rotation.y = rotation; // Update rotation
+    }
+  }, [rotation]);
 
   return (
     <>
@@ -38,7 +44,6 @@ const DraggableModel = ({ url, scale, onLoad, onClick, isSelected, onRotate }) =
             ref={rotationControlsRef}
             object={modelRef.current}
             mode="rotate"
-            onChange={onRotate} // Optional: Callback for rotation changes
           />
         </>
       )}
