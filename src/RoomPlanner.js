@@ -94,9 +94,7 @@ const RoomPlanner = () => {
     setSelectedModelId(id);
   };
 
-  const openDialog = () => {
-    setIsDialogOpen(true);
-  };
+ 
 
   const closeDialog = () => {
     setIsDialogOpen(false);
