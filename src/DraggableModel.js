@@ -18,7 +18,7 @@ const DraggableModel = ({ url, scale, onLoad, onClick, isSelected }) => {
       <primitive
         ref={modelRef}
         object={scene}
-        scale={scale}
+        scale={20}
         onClick={onClick}
         castShadow
         receiveShadow
