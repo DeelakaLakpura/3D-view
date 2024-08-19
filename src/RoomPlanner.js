@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
 import useModelData from './useModelData';
 import DraggableModel from './DraggableModel';
-import { Dialog } from '@headlessui/react'; // Import Headless UI for dialog
+import { Dialog } from '@headlessui/react'; 
 
 const Room = () => {
   const floorTexture = useTexture('/floor.jpg');
