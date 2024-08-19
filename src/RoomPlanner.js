@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
 import useModelData from './useModelData';
 import DraggableModel from './DraggableModel';
+import { Dialog } from '@headlessui/react'; // Import Headless UI for dialog
 
 const Room = () => {
   const floorTexture = useTexture('/floor.jpg');
@@ -47,7 +48,7 @@ const RoomPlanner = () => {
   const modelData = useModelData();
   const [selectedModels, setSelectedModels] = useState([]);
   const [selectedModelId, setSelectedModelId] = useState(null);
-  const [rotationAngle, setRotationAngle] = useState(0);
+  
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleModelSelect = (model) => {
@@ -72,15 +73,7 @@ const RoomPlanner = () => {
     );
   };
 
-  const handleRotationChange = (event) => {
-    const newAngle = parseFloat(event.target.value);
-    setRotationAngle(newAngle);
-    setSelectedModels((prevModels) =>
-      prevModels.map((model) =>
-        model.id === selectedModelId ? { ...model, rotation: [0, newAngle * (Math.PI / 180), 0] } : model
-      )
-    );
-  };
+  
 
   const resetScene = () => {
     setSelectedModels([]);
@@ -100,25 +93,39 @@ const RoomPlanner = () => {
   };
 
   return (
-    <div className="relative w-full h-screen">
-      {/* Top Right Buttons */}
-      <div className="absolute top-4 right-4 z-10 flex space-x-2">
-        <button onClick={increaseSize} className="p-2 bg-blue-500 text-white rounded">
+    <div className="relative h-screen w-screen">
+      <div className="absolute top-4 right-4 flex space-x-4">
+        <button
+          onClick={increaseSize}
+          className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-md"
+        >
           Increase Size
         </button>
-        <button onClick={decreaseSize} className="p-2 bg-red-500 text-white rounded">
+        <button
+          onClick={decreaseSize}
+          className="px-4 py-2 bg-red-500 text-white rounded-md shadow-md"
+        >
           Decrease Size
         </button>
-        <button onClick={openDialog} className="p-2 bg-gray-500 text-white rounded">
+        <button
+          onClick={openDialog}
+          className="px-4 py-2 bg-green-500 text-white rounded-md shadow-md"
+        >
           Product View
         </button>
-        <button onClick={resetScene} className="p-2 bg-gray-700 text-white rounded">
+        <button
+          onClick={resetScene}
+          className="px-4 py-2 bg-gray-500 text-white rounded-md shadow-md"
+        >
           Reset Scene
         </button>
       </div>
 
-      {/* Canvas for 3D Room */}
-      <Canvas shadows camera={{ position: [0, 31.5, 50], fov: 60 }} className="w-full h-full">
+      <Canvas
+        shadows
+        camera={{ position: [0, 31.5, 50], fov: 60 }}
+        className="w-full h-full bg-light-gray"
+      >
         <ambientLight intensity={1} />
         <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
         <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
@@ -136,30 +143,39 @@ const RoomPlanner = () => {
         <OrbitControls enableRotate={false} />
       </Canvas>
 
-      {/* Product View Dialog */}
-      {isDialogOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-            <h2 className="text-lg font-bold mb-4">Product List</h2>
-            <div className="max-h-64 overflow-y-auto">
+      {/* Product Dialog */}
+      <Dialog open={isDialogOpen} onClose={closeDialog} className="relative z-10">
+        <div className="fixed inset-0 flex items-center justify-center p-4 bg-black bg-opacity-50">
+          <Dialog.Panel className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
+            <Dialog.Title className="text-lg font-medium text-gray-900">Product List</Dialog.Title>
+            <Dialog.Description className="mt-2 text-sm text-gray-500">
+              Select a product to add to the room.
+            </Dialog.Description>
+            <ul className="mt-4 space-y-2">
               {modelData.map((model) => (
-                <div key={model} className="flex items-center justify-between mb-2">
-                  <span>{model}</span>
-                  <button
-                    onClick={() => handleModelSelect(model)}
-                    className="p-2 bg-blue-500 text-white rounded"
-                  >
-                    Add to Room
-                  </button>
-                </div>
+                <li
+                  key={model.id}
+                  className="p-2 bg-gray-100 rounded-lg cursor-pointer hover:bg-gray-200"
+                  onClick={() => {
+                    handleModelSelect(model.url);
+                    closeDialog();
+                  }}
+                >
+                  {model.name}
+                </li>
               ))}
+            </ul>
+            <div className="mt-4">
+              <button
+                onClick={closeDialog}
+                className="px-4 py-2 bg-red-500 text-white rounded-md"
+              >
+                Close
+              </button>
             </div>
-            <button onClick={closeDialog} className="mt-4 p-2 bg-gray-500 text-white rounded w-full">
-              Close
-            </button>
-          </div>
+          </Dialog.Panel>
         </div>
-      )}
+      </Dialog>
     </div>
   );
 };
