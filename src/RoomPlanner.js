@@ -59,7 +59,7 @@ const RoomPlanner = () => {
   const increaseSize = () => {
     setSelectedModels((prevModels) =>
       prevModels.map((model) =>
-        model.id === selectedModelId ? { ...model, scale: model.scale.map((s) => s + 0.1) } : model
+        model.id === selectedModelId ? { ...model, scale: model.scale.map((s) => s + 1) } : model
       )
     );
   };
@@ -67,7 +67,7 @@ const RoomPlanner = () => {
   const decreaseSize = () => {
     setSelectedModels((prevModels) =>
       prevModels.map((model) =>
-        model.id === selectedModelId ? { ...model, scale: model.scale.map((s) => Math.max(s - 0.1, 0.1)) } : model
+        model.id === selectedModelId ? { ...model, scale: model.scale.map((s) => Math.max(s - 1, 1)) } : model
       )
     );
   };
