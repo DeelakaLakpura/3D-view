@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useTexture} from '@react-three/drei';
+import { OrbitControls, useTexture } from '@react-three/drei';
 import useModelData from './useModelData'; // Ensure the path is correct
 import ModelSelector from './ModelSelector'; // Ensure the path is correct
 import DraggableModel from './DraggableModel'; // Ensure the path is correct
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus, faUndo } from '@fortawesome/free-solid-svg-icons';
+
 
 const Room = () => {
-  const floorTexture = useTexture('/wood.jpg');
+  const floorTexture = useTexture('/floor.jpg');
   const wallTexture = useTexture('/texture-2068283.jpg');
 
   return (
@@ -17,7 +16,7 @@ const Room = () => {
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[50, 50]} />
         <meshStandardMaterial map={floorTexture} />
-      </mesh>
+      </mesh> 
 
       {/* Back Wall */}
       <mesh receiveShadow position={[0, 12.5, -25]}>
@@ -55,7 +54,7 @@ const RoomPlanner = () => {
 
   const handleModelSelect = (model) => {
     setIsLoading(true); // Show loading dialog
-    const newModel = { url: model, id: Date.now(), scale: [1, 1, 1], rotation: 0 }; // Default scale and rotation
+    const newModel = { url: model, id: Date.now(), scale: [2, 2, 2], rotation: 0 }; // Default scale and rotation
     setSelectedModels([...selectedModels, newModel]); // Add model to the list
     setSelectedModelId(newModel.id); // Automatically select the newly added model
   };
@@ -67,9 +66,7 @@ const RoomPlanner = () => {
   const increaseSize = () => {
     setSelectedModels((prevModels) =>
       prevModels.map((model) =>
-        model.id === selectedModelId
-          ? { ...model, scale: model.scale.map(s => s + 1) }
-          : model
+        model.id === selectedModelId ? { ...model, scale: model.scale.map(s => s + 1) } : model
       )
     );
   };
@@ -77,9 +74,7 @@ const RoomPlanner = () => {
   const decreaseSize = () => {
     setSelectedModels((prevModels) =>
       prevModels.map((model) =>
-        model.id === selectedModelId
-          ? { ...model, scale: model.scale.map(s => Math.max(s - 1, 1)) }
-          : model
+        model.id === selectedModelId ? { ...model, scale: model.scale.map(s => Math.max(s - 1, 1)) } : model
       )
     );
   };
@@ -108,17 +103,11 @@ const RoomPlanner = () => {
       <div className="w-64 p-4 bg-gray-100 border-r border-gray-300">
         <ModelSelector models={modelData} onModelSelect={handleModelSelect} />
         <div className="mt-4">
-          <button
-            onClick={increaseSize}
-            className="block w-full p-2 mb-2 flex items-center justify-center bg-blue-500 text-white rounded"
-          >
-            <FontAwesomeIcon icon={faPlus} className="text-xl" />
+          <button onClick={increaseSize} className="block w-full p-2 bg-blue-500 text-white mb-2">
+            Increase Size
           </button>
-          <button
-            onClick={decreaseSize}
-            className="block w-full p-2 mb-2 flex items-center justify-center bg-red-500 text-white rounded"
-          >
-            <FontAwesomeIcon icon={faMinus} className="text-xl" />
+          <button onClick={decreaseSize} className="block w-full p-2 bg-red-500 text-white mb-2">
+            Decrease Size
           </button>
           <div className="mb-4">
             <label className="block mb-2 text-lg font-medium text-gray-700">Rotation (degrees):</label>
@@ -133,20 +122,16 @@ const RoomPlanner = () => {
             />
             <div className="text-center text-gray-700">{rotationAngle}°</div>
           </div>
-          <button
-            onClick={resetScene}
-            className="block w-full p-2 bg-gray-500 text-white mt-2 rounded flex items-center justify-center"
-          >
-            <FontAwesomeIcon icon={faUndo} className="text-xl" />
-            <span className="ml-2">Reset Scene</span>
+          <button onClick={resetScene} className="block w-full p-2 bg-gray-500 text-white mt-2">
+            Reset Scene
           </button>
         </div>
       </div>
       <div className="flex-1 relative">
         {isLoading && (
           <div className="absolute inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 z-10">
-            <div className="flex flex-col items-center">
-              <dotlottie-player
+          <div>
+          <dotlottie-player
                 src="https://lottie.host/26a21a33-0f06-4040-8569-fdd95203dcfc/9N0zcfkBrF.json"
                 background="transparent"
                 speed="1"
@@ -154,8 +139,8 @@ const RoomPlanner = () => {
                 loop
                 autoplay
               ></dotlottie-player>
-              <div className="p-4 bg-white rounded mt-4">Loading model...</div>
             </div>
+            <div className="p-4 bg-white rounded">Loading model...</div>
           </div>
         )}
         <Canvas
@@ -164,12 +149,9 @@ const RoomPlanner = () => {
           className="w-full h-screen bg-light-gray"
           style={{ width: '100%', height: '800px', backgroundColor: 'lightgray' }}
         >
-          {/* Lighting */}
-          <ambientLight intensity={0.5} /> {/* Ambient light */}
-          <directionalLight position={[5, 10, 5]} intensity={0.8} /> {/* Directional light */}
-          <pointLight position={[10, 10, 10]} intensity={1} /> {/* Point light */}
-          <spotLight position={[-10, 20, 10]} angle={0.3} penumbra={1} intensity={1} castShadow /> {/* Spot light */}
-          <hemisphereLight skyColor={0xeeeeff} groundColor={0x777777} intensity={0.5} /> {/* Hemisphere light */}
+          <ambientLight intensity={1} />
+          <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
+          <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <Room />
           {selectedModels.map((model) => (
             <DraggableModel
@@ -177,9 +159,9 @@ const RoomPlanner = () => {
               url={model.url}
               scale={model.scale}
               rotation={model.rotation}
-              isSelected={model.id === selectedModelId}
               onLoad={handleModelLoad}
-              onClick={() =>  handleModelClick(model.id)}
+              onClick={() => handleModelClick(model.id)} // Select model on click
+              isSelected={model.id === selectedModelId} // Highlight selected model
             />
           ))}
           <OrbitControls enableRotate={false} />
@@ -187,6 +169,6 @@ const RoomPlanner = () => {
       </div>
     </div>
   );
-};
+}; 
 
 export default RoomPlanner;
