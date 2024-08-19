@@ -46,13 +46,13 @@ const Room = () => {
 
 const RoomPlanner = () => {
   const modelData = useModelData();
-  const [selectedModel, setSelectedModel] = useState(null);
-  const [scale, setScale] = useState([2, 2, 2]); // Increased default scale
+  const [selectedModels, setSelectedModels] = useState([]);
+  const [scale, setScale] = useState([2, 2, 2]); // Default scale for all models
   const [isLoading, setIsLoading] = useState(false); // State for loading dialog
 
   const handleModelSelect = (model) => {
     setIsLoading(true); // Show loading dialog
-    setSelectedModel(model);
+    setSelectedModels([...selectedModels, { url: model, id: Date.now(), scale }]); // Add model to the list
   };
 
   const handleModelLoad = () => {
@@ -67,6 +67,11 @@ const RoomPlanner = () => {
     setScale((prev) => prev.map((s) => Math.max(s - 0.1, 0.1))); // Prevent size going below 0.1
   };
 
+  const resetScene = () => {
+    setSelectedModels([]); // Clear all models
+    setScale([2, 2, 2]); // Reset scale to default
+  };
+
   return (
     <div className="flex">
       <div className="w-64 p-4 bg-gray-100 border-r border-gray-300">
@@ -77,6 +82,9 @@ const RoomPlanner = () => {
           </button>
           <button onClick={decreaseSize} className="block w-full p-2 bg-red-500 text-white">
             Decrease Size
+          </button>
+          <button onClick={resetScene} className="block w-full p-2 bg-gray-500 text-white mt-2">
+            Reset Scene
           </button>
         </div>
       </div>
@@ -96,9 +104,14 @@ const RoomPlanner = () => {
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <Room />
-          {selectedModel && (
-            <DraggableModel url={selectedModel} scale={scale} onLoad={handleModelLoad} />
-          )}
+          {selectedModels.map((model) => (
+            <DraggableModel
+              key={model.id}
+              url={model.url}
+              scale={model.scale}
+              onLoad={handleModelLoad}
+            />
+          ))}
           <OrbitControls enableRotate={false} />
         </Canvas>
       </div>
