@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
 import useModelData from './useModelData'; // Ensure the path is correct
@@ -33,7 +33,7 @@ const Room = () => {
       <mesh receiveShadow rotation={[0, -Math.PI / 2, 0]} position={[25, 12.5, 0]}>
         <boxGeometry args={[50, 25, 1]} />
         <meshStandardMaterial map={wallTexture} />
-      </mesh>
+      </mesh> 
 
       {/* Ceiling */}
       <mesh receiveShadow rotation={[Math.PI, 0, 0]} position={[0, 25, 0]}>
