@@ -165,8 +165,8 @@ const RoomPlanner = () => {
         <Canvas
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
-          className=" h-full bg-light-gray"
-          style={{ width: '800px' }}
+          className="w-full h-full bg-light-gray"
+          style={{width:'550px'}}
         >
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
@@ -192,7 +192,14 @@ const RoomPlanner = () => {
             <FontAwesomeIcon icon={faBars} />
           </button>
         )}
-       
+        {!isSidebarOpen && (
+          <button
+            onClick={bringToFront}
+            className="absolute top-16 left-4 p-2 text-gray-400 rounded-full z-20"
+          >
+            <FontAwesomeIcon icon={faArrowUp} />
+          </button>
+        )}
       </div>
     </div>
   );
