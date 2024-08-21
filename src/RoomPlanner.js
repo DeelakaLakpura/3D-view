@@ -161,12 +161,12 @@ const RoomPlanner = () => {
       </div>
 
       {/* Main Canvas */}
-      <div className="flex-1">
+      <div className="flex-1 justify-center items-center w-full h-full">
         <Canvas
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
           className="w-full h-full bg-light-gray"
-          style={{width:'700px'}}
+       
         >
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
