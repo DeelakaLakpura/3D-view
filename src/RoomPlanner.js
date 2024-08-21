@@ -4,6 +4,8 @@ import { OrbitControls, useTexture } from '@react-three/drei';
 import useModelData from './useModelData'; // Ensure the path is correct
 import ModelSelector from './ModelSelector'; // Ensure the path is correct
 import DraggableModel from './DraggableModel'; // Ensure the path is correct
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faTimes, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 const Room = () => {
   const floorTexture = useTexture('/floor.jpg');
@@ -15,7 +17,7 @@ const Room = () => {
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[50, 50]} />
         <meshStandardMaterial map={floorTexture} />
-      </mesh> 
+      </mesh>
 
       {/* Back Wall */}
       <mesh receiveShadow position={[0, 12.5, -25]}>
@@ -92,17 +94,46 @@ const RoomPlanner = () => {
     setSelectedModelId(id);
   };
 
+  const bringToFront = () => {
+    if (selectedModelId) {
+      setSelectedModels((prevModels) => {
+        const selectedModelIndex = prevModels.findIndex((model) => model.id === selectedModelId);
+        if (selectedModelIndex !== -1) {
+          const updatedModels = [...prevModels];
+          const [selectedModel] = updatedModels.splice(selectedModelIndex, 1);
+          updatedModels.push(selectedModel);
+          return updatedModels;
+        }
+        return prevModels;
+      });
+    }
+  };
+
   return (
-    <div className="flex flex-col lg:flex-row">
+    <div className="relative h-screen flex">
       {/* Sidebar */}
-      <div className={`w-full lg:w-64 p-4 bg-gray-100 border-b lg:border-b-0 lg:border-r border-gray-300 transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="lg:hidden absolute top-4 left-4 p-2 bg-gray-500 text-white rounded-full"
-        >
-          <i className={`fas ${isSidebarOpen ? 'fa-chevron-left' : 'fa-chevron-right'}`}></i>
-        </button>
+      <div
+        className={`absolute z-10 lg:static bg-gray-100 transition-transform transform lg:translate-x-0 ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } w-64 lg:w-80 h-full p-4 overflow-y-auto border-r border-gray-300`}
+      >
+        <div className="flex justify-between items-center mb-4">
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="lg:hidden p-2 bg-gray-500 text-white rounded-full"
+          >
+            <FontAwesomeIcon icon={isSidebarOpen ? faTimes : faBars} />
+          </button>
+          <button
+            onClick={bringToFront}
+            className="p-2 bg-blue-500 text-white rounded-full ml-auto"
+          >
+            <FontAwesomeIcon icon={faArrowUp} />
+          </button>
+        </div>
+
         <ModelSelector models={modelData} onModelSelect={handleModelSelect} />
+
         <div className="mt-4">
           <button onClick={increaseSize} className="block w-full p-2 bg-blue-500 text-white mb-2">
             Increase Size
@@ -128,11 +159,13 @@ const RoomPlanner = () => {
           </button>
         </div>
       </div>
-      <div className="flex-1 relative">
+
+      {/* Main Canvas */}
+      <div className="flex-1">
         <Canvas
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
-          className="w-full h-screen bg-light-gray"
+          className="w-full h-full bg-light-gray"
         >
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
@@ -150,6 +183,22 @@ const RoomPlanner = () => {
           ))}
           <OrbitControls enableRotate={false} />
         </Canvas>
+        {!isSidebarOpen && (
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="absolute top-4 left-4 p-2 bg-gray-500 text-white rounded-full z-20"
+          >
+            <FontAwesomeIcon icon={faBars} />
+          </button>
+        )}
+        {!isSidebarOpen && (
+          <button
+            onClick={bringToFront}
+            className="absolute top-16 left-4 p-2 bg-blue-500 text-white rounded-full z-20"
+          >
+            <FontAwesomeIcon icon={faArrowUp} />
+          </button>
+        )}
       </div>
     </div>
   );
