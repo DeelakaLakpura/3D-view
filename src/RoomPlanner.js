@@ -15,7 +15,7 @@ const Room = ({ floorTextureUrl, wallTextureUrl }) => {
     <>
     {/* Floor */}
     <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-      <planeGeometry args={[30, 30]} /> {/* Decreased the size */}
+      <planeGeometry args={[40, 40]} /> {/* Decreased the size */}
       <meshStandardMaterial map={floorTexture} />
     </mesh>
   
@@ -39,7 +39,7 @@ const Room = ({ floorTextureUrl, wallTextureUrl }) => {
   
     {/* Ceiling */}
     <mesh receiveShadow rotation={[Math.PI, 0, 0]} position={[0, 25, 0]}>
-      <planeGeometry args={[30, 30]} /> {/* Decreased the size */}
+      <planeGeometry args={[40, 40]} /> {/* Decreased the size */}
       <meshStandardMaterial color="lightgray" />
     </mesh>
   
@@ -68,7 +68,7 @@ const Room = ({ floorTextureUrl, wallTextureUrl }) => {
   
     {/* Ceiling Patterns */}
     <mesh rotation={[Math.PI, 0, 0]} position={[0, 25, 0]}>
-      <planeGeometry args={[30, 30]} />
+      <planeGeometry args={[40, 40]} />
     </mesh>
   </>
   
