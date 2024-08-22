@@ -14,7 +14,7 @@ const Room = ({ floorTextureUrl, wallTextureUrl }) => {
   return (
     <>
       {/* Room Floor */}
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+      <mesh className="ml-6" receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[50, 50]} />
         <meshStandardMaterial map={floorTexture} />
       </mesh>
@@ -204,7 +204,7 @@ const RoomPlanner = () => {
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
-          <Room floorTextureUrl={floorTextureUrl} wallTextureUrl={wallTextureUrl} className="ml-6" />
+          <Room floorTextureUrl={floorTextureUrl} wallTextureUrl={wallTextureUrl} />
           {selectedModels.map((model) => (
             <DraggableModel
               key={model.id}
