@@ -13,7 +13,7 @@ const Room = ({ floorTextureUrl, wallTextureUrl }) => {
 
   return (
     <>
-     <div className='ml-14'>
+ 
   {/* Floor */}
   <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
     <planeGeometry args={[50, 50]} />
@@ -76,7 +76,7 @@ const Room = ({ floorTextureUrl, wallTextureUrl }) => {
 
 
   
-</div>
+
 
     </>
   );
