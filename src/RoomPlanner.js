@@ -13,37 +13,71 @@ const Room = ({ floorTextureUrl, wallTextureUrl }) => {
 
   return (
     <>
-      <div className='ml-14'>
-      <mesh  receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-        <planeGeometry args={[50, 50]} />
-        
-        <meshStandardMaterial map={floorTexture} />
-      </mesh>
+     <div className='ml-14'>
+  {/* Floor */}
+  <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+    <planeGeometry args={[50, 50]} />
+    <meshStandardMaterial map={floorTexture} />
+  </mesh>
 
-      {/* Back Wall */}
-      <mesh receiveShadow position={[0, 12.5, -25]}>
-        <boxGeometry args={[50, 25, 1]} />
-        <meshStandardMaterial map={wallTexture} />
-      </mesh>
+  {/* Back Wall */}
+  <mesh receiveShadow position={[0, 12.5, -25]}>
+    <boxGeometry args={[50, 25, 1]} />
+    <meshStandardMaterial map={wallTexture} />
+  </mesh>
 
-      {/* Left Wall */}
-      <mesh receiveShadow rotation={[0, Math.PI / 2, 0]} position={[-25, 12.5, 0]}>
-        <boxGeometry args={[50, 25, 1]} />
-        <meshStandardMaterial map={wallTexture} />
-      </mesh>
+  {/* Left Wall */}
+  <mesh receiveShadow rotation={[0, Math.PI / 2, 0]} position={[-25, 12.5, 0]}>
+    <boxGeometry args={[50, 25, 1]} />
+    <meshStandardMaterial map={wallTexture} />
+  </mesh>
 
-      {/* Right Wall */}
-      <mesh receiveShadow rotation={[0, -Math.PI / 2, 0]} position={[25, 12.5, 0]}>
-        <boxGeometry args={[50, 25, 1]} />
-        <meshStandardMaterial map={wallTexture} />
-      </mesh>
+  {/* Right Wall */}
+  <mesh receiveShadow rotation={[0, -Math.PI / 2, 0]} position={[25, 12.5, 0]}>
+    <boxGeometry args={[50, 25, 1]} />
+    <meshStandardMaterial map={wallTexture} />
+  </mesh>
 
-      {/* Ceiling */}
-      <mesh receiveShadow rotation={[Math.PI, 0, 0]} position={[0, 25, 0]}>
-        <planeGeometry args={[50, 50]} />
-        <meshStandardMaterial color="lightgray" />
-      </mesh>
-      </div>
+  {/* Ceiling */}
+  <mesh receiveShadow rotation={[Math.PI, 0, 0]} position={[0, 25, 0]}>
+    <planeGeometry args={[50, 50]} />
+    <meshStandardMaterial color="lightgray" />
+  </mesh>
+
+  {/* Creative Lighting */}
+  <ambientLight intensity={0.5} />
+  <pointLight position={[10, 20, 10]} intensity={1.2} color="white" />
+  <spotLight position={[0, 30, 0]} angle={0.5} penumbra={1} intensity={2} color="white" />
+
+  {/* Decorative Elements */}
+  {/* Add some decorative columns */}
+  <mesh receiveShadow position={[-24, 12.5, -24]}>
+    <cylinderGeometry args={[1, 1, 10, 32]} />
+    <meshStandardMaterial color="darkgray" />
+  </mesh>
+
+  <mesh receiveShadow position={[24, 12.5, -24]}>
+    <cylinderGeometry args={[1, 1, 10, 32]} />
+    <meshStandardMaterial color="darkgray" />
+  </mesh>
+
+  {/* Wall Art */}
+  <mesh position={[0, 15, -24.5]}>
+    <planeGeometry args={[10, 5]} />
+
+  </mesh>
+
+  {/* Ceiling Patterns */}
+  <mesh rotation={[Math.PI, 0, 0]} position={[0, 25, 0]}>
+    <planeGeometry args={[50, 50]} />
+    <meshStandardMaterial color="lightgray" />
+ 
+  </mesh>
+
+
+  
+</div>
+
     </>
   );
 };
