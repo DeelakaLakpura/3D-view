@@ -134,6 +134,7 @@ const RoomPlanner = () => {
         className={`fixed top-0 left-0 z-10 bg-gray-100 transition-transform duration-300 ease-in-out transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } w-full md:w-64 h-full p-4 overflow-y-auto border-r border-gray-300`}
+        style={{ height: '100vh' }}
       >
         <div className="flex justify-between items-center mb-4">
           <button
@@ -211,10 +212,19 @@ const RoomPlanner = () => {
               scale={model.scale}
               rotation={model.rotation}
               onClick={() => handleModelClick(model.id)}
+              bringToFront={bringToFront}
             />
           ))}
           <OrbitControls />
         </Canvas>
+
+        {/* Sidebar Toggle Button (for larger screens) */}
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="fixed top-4 right-4 p-2 bg-gray-500 text-white rounded-full md:hidden"
+        >
+          <FontAwesomeIcon icon={isSidebarOpen ? faTimes : faBars} />
+        </button>
       </div>
     </div>
   );
