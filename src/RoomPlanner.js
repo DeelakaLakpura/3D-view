@@ -7,10 +7,7 @@ import DraggableModel from './DraggableModel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
-const Room = () => {
-  const floorTexture = useTexture('/floor.jpg');
-  const wallTexture = useTexture('/texture-2068283.jpg');
-
+const Room = ({ floorTexture, wallTexture }) => {
   return (
     <>
       {/* Room Floor */}
@@ -52,6 +49,8 @@ const RoomPlanner = () => {
   const [selectedModelId, setSelectedModelId] = useState(null);
   const [rotationAngle, setRotationAngle] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [floorTexture, setFloorTexture] = useState(useTexture('/floor.jpg'));
+  const [wallTexture, setWallTexture] = useState(useTexture('/texture-2068283.jpg'));
 
   const handleModelSelect = (model) => {
     const newModel = { url: model, id: Date.now(), scale: [2, 2, 2], rotation: [0, 0, 0] };
@@ -109,6 +108,23 @@ const RoomPlanner = () => {
     }
   };
 
+  const handleTextureChange = (textureType, textureUrl) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const newTexture = useTexture(textureUrl);
+    if (textureType === 'floor') {
+      setFloorTexture(newTexture);
+    } else if (textureType === 'wall') {
+      setWallTexture(newTexture);
+    }
+  };
+
+  const textureOptions = [
+    { type: 'floor', url: '/tile_floor.jpg' },
+    { type: 'floor', url: '/wood.jpg' },
+    { type: 'wall', url: '/wall_s.jpg' },
+    { type: 'wall', url: '/wall_y.jpg' },
+  ];
+
   return (
     <div className="relative h-screen flex flex-col md:flex-row">
       {/* Sidebar */}
@@ -157,6 +173,22 @@ const RoomPlanner = () => {
             Reset Scene
           </button>
         </div>
+
+        <div className="mt-4">
+          <h2 className="text-lg font-medium text-gray-700 mb-2">Change Textures</h2>
+          <div className="grid grid-cols-2 gap-2">
+            {textureOptions.map((texture, index) => (
+              <div key={index} className="w-12 h-12">
+                <img
+                  src={texture.url}
+                  alt={`Texture ${index}`}
+                  className="w-full h-full object-cover rounded-full cursor-pointer"
+                  onClick={() => handleTextureChange(texture.type, texture.url)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Main Canvas */}
@@ -169,7 +201,7 @@ const RoomPlanner = () => {
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
-          <Room />
+          <Room floorTexture={floorTexture} wallTexture={wallTexture} />
           {selectedModels.map((model) => (
             <DraggableModel
               key={model.id}
@@ -180,25 +212,8 @@ const RoomPlanner = () => {
               isSelected={model.id === selectedModelId}
             />
           ))}
-          <OrbitControls enableRotate={false} />
+          <OrbitControls />
         </Canvas>
-
-        {!isSidebarOpen && (
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="absolute top-4 left-4 p-2 bg-gray-500 text-white rounded-full z-20"
-          >
-            <FontAwesomeIcon icon={faBars} />
-          </button>
-        )}
-        {!isSidebarOpen && (
-          <button
-            onClick={bringToFront}
-            className="absolute top-16 left-4 p-2 bg-blue-500 text-white rounded-full z-20"
-          >
-            <FontAwesomeIcon icon={faArrowUp} />
-          </button>
-        )}
       </div>
     </div>
   );
