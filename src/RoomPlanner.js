@@ -110,17 +110,17 @@ const RoomPlanner = () => {
   };
 
   return (
-    <div className="relative h-screen flex">
+    <div className="relative h-screen flex flex-col md:flex-row">
       {/* Sidebar */}
       <div
-        className={`absolute z-10 lg:static bg-gray-100 transition-transform transform lg:translate-x-0 ${
+        className={`absolute z-10 md:static bg-gray-100 transition-transform transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } w-64 lg:w-80 h-full p-4 overflow-y-auto border-r border-gray-300`}
+        } w-full md:w-64 h-full md:h-full p-4 overflow-y-auto border-r border-gray-300`}
       >
         <div className="flex justify-between items-center mb-4">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="lg:hidden p-2 bg-gray-500 text-white rounded-full"
+            className="md:hidden p-2 bg-gray-500 text-white rounded-full"
           >
             <FontAwesomeIcon icon={isSidebarOpen ? faTimes : faBars} />
           </button>
@@ -161,12 +161,11 @@ const RoomPlanner = () => {
       </div>
 
       {/* Main Canvas */}
-      <div className="flex-1 justify-center items-center w-full h-full">
+      <div className="flex-1 relative">
         <Canvas
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
           className="w-full h-full bg-light-gray"
-       
         >
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
@@ -184,6 +183,7 @@ const RoomPlanner = () => {
           ))}
           <OrbitControls enableRotate={false} />
         </Canvas>
+
         {!isSidebarOpen && (
           <button
             onClick={() => setIsSidebarOpen(true)}
@@ -195,7 +195,7 @@ const RoomPlanner = () => {
         {!isSidebarOpen && (
           <button
             onClick={bringToFront}
-            className="absolute top-16 left-4 p-2 text-gray-400 rounded-full z-20"
+            className="absolute top-16 left-4 p-2 bg-blue-500 text-white rounded-full z-20"
           >
             <FontAwesomeIcon icon={faArrowUp} />
           </button>
