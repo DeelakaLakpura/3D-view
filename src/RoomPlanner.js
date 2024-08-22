@@ -7,7 +7,10 @@ import DraggableModel from './DraggableModel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
-const Room = ({ floorTexture, wallTexture }) => {
+const Room = ({ floorTextureUrl, wallTextureUrl }) => {
+  const floorTexture = useTexture(floorTextureUrl);
+  const wallTexture = useTexture(wallTextureUrl);
+
   return (
     <>
       {/* Room Floor */}
@@ -49,8 +52,8 @@ const RoomPlanner = () => {
   const [selectedModelId, setSelectedModelId] = useState(null);
   const [rotationAngle, setRotationAngle] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [floorTexture, setFloorTexture] = useState(useTexture('/floor.jpg'));
-  const [wallTexture, setWallTexture] = useState(useTexture('/texture-2068283.jpg'));
+  const [floorTextureUrl, setFloorTextureUrl] = useState('/floor.jpg');
+  const [wallTextureUrl, setWallTextureUrl] = useState('/texture-2068283.jpg');
 
   const handleModelSelect = (model) => {
     const newModel = { url: model, id: Date.now(), scale: [2, 2, 2], rotation: [0, 0, 0] };
@@ -109,18 +112,17 @@ const RoomPlanner = () => {
   };
 
   const handleTextureChange = (textureType, textureUrl) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const newTexture = useTexture(textureUrl);
     if (textureType === 'floor') {
-      setFloorTexture(newTexture);
+      setFloorTextureUrl(textureUrl);
     } else if (textureType === 'wall') {
-      setWallTexture(newTexture);
+      setWallTextureUrl(textureUrl);
     }
   };
 
   const textureOptions = [
     { type: 'floor', url: '/tile_floor.jpg' },
-    { type: 'floor', url: '/wood.jpg' },
+    { type: 'floor', url: '/wood_floor.jpg' },
+    { type: 'wall', url: '/wood.jpg' },
     { type: 'wall', url: '/wall_s.jpg' },
     { type: 'wall', url: '/wall_y.jpg' },
   ];
@@ -201,15 +203,14 @@ const RoomPlanner = () => {
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
-          <Room floorTexture={floorTexture} wallTexture={wallTexture} />
+          <Room floorTextureUrl={floorTextureUrl} wallTextureUrl={wallTextureUrl} />
           {selectedModels.map((model) => (
             <DraggableModel
               key={model.id}
-              url={model.url}
+              modelUrl={model.url}
               scale={model.scale}
               rotation={model.rotation}
               onClick={() => handleModelClick(model.id)}
-              isSelected={model.id === selectedModelId}
             />
           ))}
           <OrbitControls />
