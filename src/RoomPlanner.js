@@ -131,7 +131,7 @@ const RoomPlanner = () => {
     <div className="relative h-screen flex flex-col md:flex-row">
       {/* Sidebar */}
       <div
-        className={`absolute z-10 md:static bg-gray-100 transition-transform duration-300 ease-in-out transform ${
+        className={`fixed top-0 left-0 z-10 bg-gray-100 transition-transform duration-300 ease-in-out transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } w-full md:w-64 h-full p-4 overflow-y-auto border-r border-gray-300`}
       >
@@ -205,15 +205,14 @@ const RoomPlanner = () => {
           <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <Room floorTextureUrl={floorTextureUrl} wallTextureUrl={wallTextureUrl} />
           {selectedModels.map((model) => (
-  <DraggableModel
-    key={model.id}
-    url={model.url}
-    scale={model.scale}
-    rotation={model.rotation}
-    onClick={() => handleModelClick(model.id)}
-  />
-))}
-
+            <DraggableModel
+              key={model.id}
+              url={model.url}
+              scale={model.scale}
+              rotation={model.rotation}
+              onClick={() => handleModelClick(model.id)}
+            />
+          ))}
           <OrbitControls />
         </Canvas>
       </div>
