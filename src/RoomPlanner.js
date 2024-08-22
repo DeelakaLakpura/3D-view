@@ -205,14 +205,15 @@ const RoomPlanner = () => {
           <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <Room floorTextureUrl={floorTextureUrl} wallTextureUrl={wallTextureUrl} />
           {selectedModels.map((model) => (
-            <DraggableModel
-              key={model.id}
-              modelUrl={model.url}
-              scale={model.scale}
-              rotation={model.rotation}
-              onClick={() => handleModelClick(model.id)}
-            />
-          ))}
+  <DraggableModel
+    key={model.id}
+    url={model.url}
+    scale={model.scale}
+    rotation={model.rotation}
+    onClick={() => handleModelClick(model.id)}
+  />
+))}
+
           <OrbitControls />
         </Canvas>
       </div>
