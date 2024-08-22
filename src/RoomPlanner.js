@@ -13,100 +13,66 @@ const Room = ({ floorTextureUrl, wallTextureUrl }) => {
 
   return (
     <>
- <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-    <planeGeometry args={[50, 50]} />
-    <meshStandardMaterial map={floorTexture} />
-  </mesh>
-
-  {/* Back Wall */}
-  <mesh receiveShadow position={[0, 12.5, -25]}>
-    <boxGeometry args={[50, 25, 1]} />
-    <meshStandardMaterial map={wallTexture} />
-  </mesh>
-
-  {/* Left Wall */}
-  <mesh receiveShadow rotation={[0, Math.PI / 2, 0]} position={[-25, 12.5, 0]}>
-    <boxGeometry args={[50, 25, 1]} />
-    <meshStandardMaterial map={wallTexture} />
-  </mesh>
-
-  {/* Right Wall */}
-  <mesh receiveShadow rotation={[0, -Math.PI / 2, 0]} position={[25, 12.5, 0]}>
-    <boxGeometry args={[50, 25, 1]} />
-    <meshStandardMaterial map={wallTexture} />
-  </mesh>
-
-  {/* Ceiling */}
-  <mesh receiveShadow rotation={[Math.PI, 0, 0]} position={[0, 25, 0]}>
-    <planeGeometry args={[50, 50]} />
-    <meshStandardMaterial color="lightgray" />
-  </mesh>
-
-  {/* Advanced Lighting */}
-  <ambientLight intensity={0.4} />
-  <pointLight position={[10, 20, 10]} intensity={1.5} color="white" />
-  <spotLight position={[0, 30, 0]} angle={0.5} penumbra={1} intensity={2} color="white" />
-  <hemisphereLight skyColor="skyblue" groundColor="darkslategray" intensity={0.5} />
-
-  {/* Decorative Elements */}
-  {/* Columns with ornate details */}
-  <mesh receiveShadow position={[-24, 12.5, -24]}>
-    <cylinderGeometry args={[1, 1, 10, 32]} />
-    <meshStandardMaterial color="gold" />
-  </mesh>
-
-  <mesh receiveShadow position={[24, 12.5, -24]}>
-    <cylinderGeometry args={[1, 1, 10, 32]} />
-    <meshStandardMaterial color="gold" />
-  </mesh>
-
-  {/* Wall Art */}
-  <mesh position={[0, 15, -24.5]}>
-    <planeGeometry args={[12, 6]} />
- 
-  </mesh>
-
-  {/* Ceiling Patterns */}
-  <mesh rotation={[Math.PI, 0, 0]} position={[0, 25, 0]}>
-    <planeGeometry args={[50, 50]} />
-
-  </mesh>
-
-  {/* Furniture and Decor */}
-  {/* Modern Sofa */}
-  <mesh position={[0, 1, -10]}>
-    <boxGeometry args={[8, 3, 4]} />
-    <meshStandardMaterial color="beige" />
-  </mesh>
-
-  {/* Stylish Coffee Table */}
-  <mesh position={[0, 1, -5]}>
-    <boxGeometry args={[4, 0.5, 4]} />
-    <meshStandardMaterial color="darkbrown" />
-  </mesh>
-
-  {/* Floor Rug */}
-  <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, -10]}>
-    <planeGeometry args={[10, 5]} />
-   
-  </mesh>
-
-  {/* Decorative Plants */}
-  <mesh position={[-15, 1, -15]}>
-    <coneGeometry args={[1, 5, 32]} />
-    <meshStandardMaterial color="green" />
-  </mesh>
-
-  <mesh position={[15, 1, -15]}>
-    <coneGeometry args={[1, 5, 32]} />
-    <meshStandardMaterial color="green" />
-  </mesh>
-
-
+    <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[10, 0, 0]}>
+      <planeGeometry args={[50, 50]} />
+      <meshStandardMaterial map={floorTexture} />
+    </mesh>
   
-
-
-    </>
+    {/* Back Wall */}
+    <mesh receiveShadow position={[10, 12.5, -25]}>
+      <boxGeometry args={[50, 25, 1]} />
+      <meshStandardMaterial map={wallTexture} />
+    </mesh>
+  
+    {/* Left Wall */}
+    <mesh receiveShadow rotation={[0, Math.PI / 2, 0]} position={[-15, 12.5, 0]}>
+      <boxGeometry args={[50, 25, 1]} />
+      <meshStandardMaterial map={wallTexture} />
+    </mesh>
+  
+    {/* Right Wall */}
+    <mesh receiveShadow rotation={[0, -Math.PI / 2, 0]} position={[35, 12.5, 0]}>
+      <boxGeometry args={[50, 25, 1]} />
+      <meshStandardMaterial map={wallTexture} />
+    </mesh>
+  
+    {/* Ceiling */}
+    <mesh receiveShadow rotation={[Math.PI, 0, 0]} position={[10, 25, 0]}>
+      <planeGeometry args={[50, 50]} />
+      <meshStandardMaterial color="lightgray" />
+    </mesh>
+  
+    {/* Advanced Lighting */}
+    <ambientLight intensity={0.4} />
+    <pointLight position={[20, 20, 10]} intensity={1.5} color="white" />
+    <spotLight position={[10, 30, 0]} angle={0.5} penumbra={1} intensity={2} color="white" />
+    <hemisphereLight skyColor="skyblue" groundColor="darkslategray" intensity={0.5} />
+  
+    {/* Decorative Elements */}
+    {/* Columns with ornate details */}
+    <mesh receiveShadow position={[-14, 12.5, -24]}>
+      <cylinderGeometry args={[1, 1, 10, 32]} />
+      <meshStandardMaterial color="gold" />
+    </mesh>
+  
+    <mesh receiveShadow position={[34, 12.5, -24]}>
+      <cylinderGeometry args={[1, 1, 10, 32]} />
+      <meshStandardMaterial color="gold" />
+    </mesh>
+  
+    {/* Wall Art */}
+    <mesh position={[10, 15, -24.5]}>
+      <planeGeometry args={[12, 6]} />
+      {/* Add material here */}
+    </mesh>
+  
+    {/* Ceiling Patterns */}
+    <mesh rotation={[Math.PI, 0, 0]} position={[10, 25, 0]}>
+      <planeGeometry args={[50, 50]} />
+      {/* Add material here */}
+    </mesh>
+  </>
+  
   );
 };
 
