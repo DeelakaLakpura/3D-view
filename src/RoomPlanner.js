@@ -204,7 +204,7 @@ const RoomPlanner = () => {
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
-          <Room floorTextureUrl={floorTextureUrl} wallTextureUrl={wallTextureUrl} />
+          <Room floorTextureUrl={floorTextureUrl} wallTextureUrl={wallTextureUrl} className="ml-6" />
           {selectedModels.map((model) => (
             <DraggableModel
               key={model.id}
