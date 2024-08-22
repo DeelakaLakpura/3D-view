@@ -241,7 +241,7 @@ const RoomPlanner = () => {
             <DraggableModel
               key={model.id}
               url={model.url}
-              scale={model.scale}
+              scale={20}
               rotation={model.rotation}
               onClick={() => handleModelClick(model.id)}
               bringToFront={bringToFront}
