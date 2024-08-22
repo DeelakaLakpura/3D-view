@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useTexture } from '@react-three/drei';
-import useModelData from './useModelData'; // Ensure the path is correct
-import ModelSelector from './ModelSelector'; // Ensure the path is correct
-import DraggableModel from './DraggableModel'; // Ensure the path is correct
+import useModelData from './useModelData';
+import ModelSelector from './ModelSelector';
+import DraggableModel from './DraggableModel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
@@ -113,9 +113,9 @@ const RoomPlanner = () => {
     <div className="relative h-screen flex flex-col md:flex-row">
       {/* Sidebar */}
       <div
-        className={`absolute z-10 md:static bg-gray-100 transition-transform transform ${
+        className={`absolute z-10 md:static bg-gray-100 transition-transform duration-300 ease-in-out transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } w-full md:w-64 h-full md:h-full p-4 overflow-y-auto border-r border-gray-300`}
+        } w-full md:w-64 h-full p-4 overflow-y-auto border-r border-gray-300`}
       >
         <div className="flex justify-between items-center mb-4">
           <button
@@ -150,7 +150,6 @@ const RoomPlanner = () => {
               value={rotationAngle}
               onChange={handleRotationChange}
               className="w-full h-2 bg-gray-200 rounded-lg cursor-pointer"
-              style={{ backgroundSize: `${rotationAngle}% 100%` }}
             />
             <div className="text-center text-gray-700">{rotationAngle}°</div>
           </div>
