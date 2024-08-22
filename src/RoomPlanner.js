@@ -92,33 +92,40 @@ const RoomPlanner = () => {
     setSelectedModels([...selectedModels, newModel]);
     setSelectedModelId(newModel.id);
   };
-
   const increaseSize = () => {
+    console.log("Increasing size", selectedModelId);
     setSelectedModels((prevModels) =>
       prevModels.map((model) =>
-        model.id === selectedModelId ? { ...model, scale: model.scale.map((s) => s + 20) } : model
+        model.id === selectedModelId
+          ? { ...model, scale: model.scale.map((s) => s * 1.1) }
+          : model
       )
     );
   };
-
+  
   const decreaseSize = () => {
     setSelectedModels((prevModels) =>
       prevModels.map((model) =>
-        model.id === selectedModelId ? { ...model, scale: model.scale.map((s) => Math.max(s - 20, 20)) } : model
+        model.id === selectedModelId
+          ? { ...model, scale: model.scale.map((s) => Math.max(s / 1.1, 1)) } // Decrease by 10%, with a minimum limit
+          : model
       )
     );
   };
-
+  
   const handleRotationChange = (event) => {
     const newAngle = parseFloat(event.target.value);
+    console.log("Rotation change", newAngle);
     setRotationAngle(newAngle);
     setSelectedModels((prevModels) =>
       prevModels.map((model) =>
-        model.id === selectedModelId ? { ...model, rotation: [0, newAngle * (Math.PI / 180), 0] } : model
+        model.id === selectedModelId
+          ? { ...model, rotation: [0, newAngle * (Math.PI / 180), 0] }
+          : model
       )
     );
   };
-
+  
   const resetScene = () => {
     setSelectedModels([]);
     setSelectedModelId(null);
