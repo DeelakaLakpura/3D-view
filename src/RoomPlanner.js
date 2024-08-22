@@ -21,19 +21,19 @@ const Room = ({ floorTextureUrl, wallTextureUrl }) => {
   
     {/* Back Wall */}
     <mesh receiveShadow position={[0, 12.5, -15]}>
-      <boxGeometry args={[30, 25, 1]} /> {/* Decreased the size */}
+      <boxGeometry args={[40, 25, 1]} /> {/* Decreased the size */}
       <meshStandardMaterial map={wallTexture} />
     </mesh>
   
     {/* Left Wall */}
     <mesh receiveShadow rotation={[0, Math.PI / 2, 0]} position={[-15, 12.5, 0]}>
-      <boxGeometry args={[30, 25, 1]} /> {/* Decreased the size */}
+      <boxGeometry args={[40, 25, 1]} /> {/* Decreased the size */}
       <meshStandardMaterial map={wallTexture} />
     </mesh>
   
     {/* Right Wall */}
     <mesh receiveShadow rotation={[0, -Math.PI / 2, 0]} position={[15, 12.5, 0]}>
-      <boxGeometry args={[30, 25, 1]} /> {/* Decreased the size */}
+      <boxGeometry args={[40, 25, 1]} /> {/* Decreased the size */}
       <meshStandardMaterial map={wallTexture} />
     </mesh>
   
