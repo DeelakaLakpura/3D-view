@@ -215,7 +215,7 @@ const RoomPlanner = () => {
               bringToFront={bringToFront}
             />
           ))}
-          <OrbitControls />
+          <OrbitControls enableRotate={false} enablePan={false} />
         </Canvas>
 
         {/* Sidebar Toggle Button (for larger screens) */}
