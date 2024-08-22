@@ -1,82 +1,12 @@
 import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useTexture } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import useModelData from './useModelData';
 import ModelSelector from './ModelSelector';
 import DraggableModel from './DraggableModel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes, faArrowUp } from '@fortawesome/free-solid-svg-icons';
-
-const Room = ({ floorTextureUrl, wallTextureUrl }) => {
-  const floorTexture = useTexture(floorTextureUrl);
-  const wallTexture = useTexture(wallTextureUrl);
-
-  return (
-    <>
-   {/* Floor */}
-<mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-  <planeGeometry args={[50, 50]} />
-  <meshStandardMaterial map={floorTexture} />
-</mesh>
-
-{/* Back Wall */}
-<mesh receiveShadow position={[0, 12.5, -25]}>
-  <boxGeometry args={[50, 25, 1]} />
-  <meshStandardMaterial map={wallTexture} />
-</mesh>
-
-{/* Left Wall */}
-<mesh receiveShadow rotation={[0, Math.PI / 2, 0]} position={[-25, 12.5, 0]}>
-  <boxGeometry args={[50, 25, 1]} />
-  <meshStandardMaterial map={wallTexture} />
-</mesh>
-
-{/* Right Wall */}
-<mesh receiveShadow rotation={[0, -Math.PI / 2, 0]} position={[25, 12.5, 0]}>
-  <boxGeometry args={[50, 25, 1]} />
-  <meshStandardMaterial map={wallTexture} />
-</mesh>
-
-{/* Ceiling */}
-<mesh receiveShadow rotation={[Math.PI, 0, 0]} position={[0, 25, 0]}>
-  <planeGeometry args={[50, 50]} />
-  <meshStandardMaterial color="lightgray" />
-</mesh>
-
-{/* Advanced Lighting */}
-<ambientLight intensity={0.5} />
-<pointLight position={[10, 20, 10]} intensity={1.5} color="white" />
-<spotLight position={[0, 30, 0]} angle={0.5} penumbra={1} intensity={2} color="white" />
-<hemisphereLight skyColor="skyblue" groundColor="darkslategray" intensity={0.5} />
-
-{/* Decorative Elements */}
-{/* Columns with ornate details */}
-<mesh receiveShadow position={[-24, 12.5, -24]}>
-  <cylinderGeometry args={[1, 1, 10, 32]} />
-  <meshStandardMaterial color="gold" />
-</mesh>
-
-<mesh receiveShadow position={[24, 12.5, -24]}>
-  <cylinderGeometry args={[1, 1, 10, 32]} />
-  <meshStandardMaterial color="gold" />
-</mesh>
-
-{/* Wall Art */}
-<mesh position={[0, 15, -24.5]}>
-  <planeGeometry args={[12, 6]} />
-  <meshStandardMaterial color="white" />
-</mesh>
-
-{/* Ceiling Patterns */}
-<mesh rotation={[Math.PI, 0, 0]} position={[0, 25, 0]}>
-  <planeGeometry args={[50, 50]} />
-  <meshStandardMaterial color="lightgray" />
-</mesh>
-
-  </>
-  
-  );
-};
+import Room from './Room';  // Make sure this import matches your file structure
 
 const RoomPlanner = () => {
   const modelData = useModelData();
@@ -86,12 +16,17 @@ const RoomPlanner = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [floorTextureUrl, setFloorTextureUrl] = useState('/floor.jpg');
   const [wallTextureUrl, setWallTextureUrl] = useState('/texture-2068283.jpg');
+  const [floorWidth, setFloorWidth] = useState(50);
+  const [floorHeight, setFloorHeight] = useState(50);
+  const [wallWidth, setWallWidth] = useState(50);
+  const [wallHeight, setWallHeight] = useState(25);
 
   const handleModelSelect = (model) => {
     const newModel = { url: model, id: Date.now(), scale: [2, 2, 2], rotation: [0, 0, 0] };
     setSelectedModels([...selectedModels, newModel]);
     setSelectedModelId(newModel.id);
   };
+
   const increaseSize = () => {
     console.log("Increasing size", selectedModelId);
     setSelectedModels((prevModels) =>
@@ -102,7 +37,7 @@ const RoomPlanner = () => {
       )
     );
   };
-  
+
   const decreaseSize = () => {
     setSelectedModels((prevModels) =>
       prevModels.map((model) =>
@@ -112,7 +47,7 @@ const RoomPlanner = () => {
       )
     );
   };
-  
+
   const handleRotationChange = (event) => {
     const newAngle = parseFloat(event.target.value);
     console.log("Rotation change", newAngle);
@@ -125,7 +60,7 @@ const RoomPlanner = () => {
       )
     );
   };
-  
+
   const resetScene = () => {
     setSelectedModels([]);
     setSelectedModelId(null);
@@ -147,7 +82,6 @@ const RoomPlanner = () => {
         }
         return prevModels;
       });
-      
     }
   };
 
@@ -232,6 +166,54 @@ const RoomPlanner = () => {
             ))}
           </div>
         </div>
+
+        <div className="mt-4">
+          <h2 className="text-lg font-medium text-gray-700 mb-2">Floor Dimensions</h2>
+          <label className="block mb-2 text-gray-700">Width:</label>
+          <input
+            type="range"
+            min="10"
+            max="100"
+            value={floorWidth}
+            onChange={(e) => setFloorWidth(parseFloat(e.target.value))}
+            className="w-full h-2 bg-gray-200 rounded-lg cursor-pointer"
+          />
+          <div className="text-center text-gray-700">{floorWidth} units</div>
+
+          <label className="block mt-4 mb-2 text-gray-700">Height:</label>
+          <input
+            type="range"
+            min="10"
+            max="100"
+            value={floorHeight}
+            onChange={(e) => setFloorHeight(parseFloat(e.target.value))}
+            className="w-full h-2 bg-gray-200 rounded-lg cursor-pointer"
+          />
+          <div className="text-center text-gray-700">{floorHeight} units</div>
+
+          <h2 className="text-lg font-medium text-gray-700 mt-8 mb-2">Wall Dimensions</h2>
+          <label className="block mb-2 text-gray-700">Width:</label>
+          <input
+            type="range"
+            min="10"
+            max="100"
+            value={wallWidth}
+            onChange={(e) => setWallWidth(parseFloat(e.target.value))}
+            className="w-full h-2 bg-gray-200 rounded-lg cursor-pointer"
+          />
+          <div className="text-center text-gray-700">{wallWidth} units</div>
+
+          <label className="block mt-4 mb-2 text-gray-700">Height:</label>
+          <input
+            type="range"
+            min="10"
+            max="100"
+            value={wallHeight}
+            onChange={(e) => setWallHeight(parseFloat(e.target.value))}
+            className="w-full h-2 bg-gray-200 rounded-lg cursor-pointer"
+          />
+          <div className="text-center text-gray-700">{wallHeight} units</div>
+        </div>
       </div>
 
       {/* Main Canvas */}
@@ -244,7 +226,14 @@ const RoomPlanner = () => {
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
           <spotLight position={[-20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
-          <Room floorTextureUrl={floorTextureUrl} wallTextureUrl={wallTextureUrl} />
+          <Room
+            floorTextureUrl={floorTextureUrl}
+            wallTextureUrl={wallTextureUrl}
+            floorWidth={floorWidth}
+            floorHeight={floorHeight}
+            wallWidth={wallWidth}
+            wallHeight={wallHeight}
+          />
           {selectedModels.map((model) => (
             <DraggableModel
               key={model.id}
