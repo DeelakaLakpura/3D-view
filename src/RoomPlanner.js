@@ -4,8 +4,7 @@ import { OrbitControls, useTexture } from '@react-three/drei';
 import useModelData from './useModelData';
 import ModelSelector from './ModelSelector';
 import DraggableModel from './DraggableModel';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faTimes, faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import LoadingDialog from './LoadingDialog'; // Import the loading dialog
 
 const Room = () => {
   const floorTexture = useTexture('/floor.jpg');
@@ -17,7 +16,7 @@ const Room = () => {
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[50, 50]} />
         <meshStandardMaterial map={floorTexture} />
-      </mesh>
+      </mesh> 
 
       {/* Back Wall */}
       <mesh receiveShadow position={[0, 12.5, -25]}>
@@ -52,11 +51,16 @@ const RoomPlanner = () => {
   const [selectedModelId, setSelectedModelId] = useState(null);
   const [rotationAngle, setRotationAngle] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleModelSelect = (model) => {
-    const newModel = { url: model, id: Date.now(), scale: [2, 2, 2], rotation: [0, 0, 0] };
-    setSelectedModels([...selectedModels, newModel]);
-    setSelectedModelId(newModel.id);
+    setIsLoading(true); // Show loading dialog
+    setTimeout(() => { // Simulate loading time
+      const newModel = { url: model, id: Date.now(), scale: [2, 2, 2], rotation: [0, 0, 0] };
+      setSelectedModels([...selectedModels, newModel]);
+      setSelectedModelId(newModel.id);
+      setIsLoading(false); // Hide loading dialog
+    }, 1500); // Adjust the time as needed
   };
 
   const increaseSize = () => {
@@ -94,47 +98,19 @@ const RoomPlanner = () => {
     setSelectedModelId(id);
   };
 
-  const bringToFront = () => {
-    if (selectedModelId) {
-      setSelectedModels((prevModels) => {
-        const selectedModelIndex = prevModels.findIndex((model) => model.id === selectedModelId);
-        if (selectedModelIndex !== -1) {
-          const updatedModels = [...prevModels];
-          const [selectedModel] = updatedModels.splice(selectedModelIndex, 1);
-          updatedModels.push(selectedModel);
-          return updatedModels;
-        }
-        return prevModels;
-      });
-    }
-  };
-
   return (
-    <div className="relative h-screen flex flex-col md:flex-row">
+    <div className="flex flex-col lg:flex-row">
+      <LoadingDialog isLoading={isLoading} /> {/* Add loading dialog */}
       {/* Sidebar */}
-      <div
-        className={`absolute z-10 md:static bg-gray-100 transition-transform duration-300 ease-in-out transform ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } w-full md:w-64 h-full p-4 overflow-y-auto border-r border-gray-300`}
-      >
-        <div className="flex justify-between items-center mb-4">
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="md:hidden p-2 bg-gray-500 text-white rounded-full"
-          >
-            <FontAwesomeIcon icon={isSidebarOpen ? faTimes : faBars} />
-          </button>
-          <button
-            onClick={bringToFront}
-            className="p-2 bg-blue-500 text-white rounded-full ml-auto"
-          >
-            <FontAwesomeIcon icon={faArrowUp} />
-          </button>
-        </div>
-
+      <div className={`w-full lg:w-64 p-4 bg-gray-100 border-b lg:border-b-0 lg:border-r border-gray-300 transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="lg:hidden absolute top-4 left-4 p-2 bg-gray-500 text-white rounded-full"
+        >
+          <i className={`fas ${isSidebarOpen ? 'fa-chevron-left' : 'fa-chevron-right'}`}></i>
+        </button>
         <ModelSelector models={modelData} onModelSelect={handleModelSelect} />
-
-        <div className="mt-4">
+        <div className="mt-4 overflow-y-auto max-h-96">
           <button onClick={increaseSize} className="block w-full p-2 bg-blue-500 text-white mb-2">
             Increase Size
           </button>
@@ -150,21 +126,24 @@ const RoomPlanner = () => {
               value={rotationAngle}
               onChange={handleRotationChange}
               className="w-full h-2 bg-gray-200 rounded-lg cursor-pointer"
+              style={{ backgroundSize: `${rotationAngle}% 100%` }}
             />
             <div className="text-center text-gray-700">{rotationAngle}°</div>
           </div>
           <button onClick={resetScene} className="block w-full p-2 bg-gray-500 text-white mt-2">
             Reset Scene
           </button>
+          {/* Bring to Front */}
+          <button className="block w-full p-2 bg-green-500 text-white mt-2">
+            Bring to Front
+          </button>
         </div>
       </div>
-
-      {/* Main Canvas */}
       <div className="flex-1 relative">
         <Canvas
           shadows
           camera={{ position: [0, 31.5, 50], fov: 60 }}
-          className="w-full h-full bg-light-gray"
+          className="w-full h-screen bg-light-gray"
         >
           <ambientLight intensity={1} />
           <spotLight position={[20, 40, 10]} angle={0.3} penumbra={0.5} castShadow />
@@ -182,23 +161,6 @@ const RoomPlanner = () => {
           ))}
           <OrbitControls enableRotate={false} />
         </Canvas>
-
-        {!isSidebarOpen && (
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="absolute top-4 left-4 p-2 bg-gray-500 text-white rounded-full z-20"
-          >
-            <FontAwesomeIcon icon={faBars} />
-          </button>
-        )}
-        {!isSidebarOpen && (
-          <button
-            onClick={bringToFront}
-            className="absolute top-16 left-4 p-2 bg-blue-500 text-white rounded-full z-20"
-          >
-            <FontAwesomeIcon icon={faArrowUp} />
-          </button>
-        )}
       </div>
     </div>
   );
