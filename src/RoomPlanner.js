@@ -113,7 +113,7 @@ const RoomPlanner = () => {
         <div className="flex justify-between items-center mb-4">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="md:hidden p-2 bg-gray-500 text-white rounded-full"
+            className="p-2 bg-gray-500 text-white rounded-full"
           >
             <FontAwesomeIcon icon={isSidebarOpen ? faTimes : faBars} />
           </button>
@@ -247,10 +247,10 @@ const RoomPlanner = () => {
           <OrbitControls enableRotate={false} enablePan={false} />
         </Canvas>
 
-        {/* Sidebar Toggle Button (for larger screens) */}
+        {/* Sidebar Toggle Button */}
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="fixed top-4 right-4 p-2 bg-gray-500 text-white rounded-full md:hidden"
+          className="fixed top-4 right-4 p-2 bg-gray-500 text-white rounded-full"
         >
           <FontAwesomeIcon icon={isSidebarOpen ? faTimes : faBars} />
         </button>
